@@ -30,6 +30,9 @@ void quick_sort(void *base, int low, int high, size_t ele_size, int (*cmp)(const
 /* 选择排序算法 */
 void selection_sort(void *base, int low, int high, size_t ele_size, int (*cmp)(const void *, const void *));
 
+/* 插入排序算法 */
+void insertion_sort(void *base, int low, int high, size_t ele_size, int (*cmp)(const void *, const void *));
+
 /* 归并排序算法 */
 void merge_sort(void *base, int low, int high, size_t ele_size, int (*cmp)(const void *, const void *));
 

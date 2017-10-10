@@ -44,15 +44,17 @@ int cmp(const void *a, const void *b){
 }
 
 int main(){
-    const int size = 50000;
+    int size;
+    scanf("%d", &size);
     int *nums = malloc(size * sizeof(int));
     srand(time(NULL));
     for(int i = 0; i < size; i++){
-        nums[i] = rand();
+        nums[i] = rand() % size;
     }
     clock_t start = clock();
     quick_sort(nums, 0, size, sizeof(int), cmp);
 //    qsort(nums, size, sizeof(int), cmp);
+    //    insertion_sort(nums, 0, size, sizeof(int), cmp);
     clock_t end = clock();
     printf("time: %lfms\n", (double)(end - start) / CLOCKS_PER_SEC * 1000.0);
     free(nums);

@@ -156,8 +156,8 @@ void quick_sort(void *base, int low, int high, size_t ele_size, int (*cmp)(const
 }
 
 #else
-/* 使用selection_sort的截断条件 */
-#define SELECTION_SORT_CUTOFF   8
+/* 使用insertion_sort的截断条件 */
+#define INSERTION_SORT_CUTOFF   8
 
 /* 使用median-of-3的截断条件 */
 #define MEDIAN_OF_3_CUTOFF      40
@@ -177,8 +177,8 @@ int median3(void *base, int low, int mid, int high, size_t ele_size, int (*cmp)(
 
 void quick_sort(void *base, int low, int high, size_t ele_size, int (*cmp)(const void *, const void *)){
     int length = high - low;
-    if(length <= SELECTION_SORT_CUTOFF){
-        selection_sort(base, low, high, ele_size, cmp);
+    if(length <= INSERTION_SORT_CUTOFF){
+        insertion_sort(base, low, high, ele_size, cmp);
         return;
     }
     else if(length <= MEDIAN_OF_3_CUTOFF){
@@ -245,6 +245,19 @@ void selection_sort(void *base, int low, int high, size_t ele_size, int (*cmp)(c
         }
         SWAP(base, p, --high, ele_size);
     }
+}
+
+void insertion_sort(void *base, int low, int high, size_t ele_size, int (*cmp)(const void *, const void *)) {
+    if(high - low < 2) return;
+    int i, j;
+    void *val = malloc(ele_size);
+    for(i = low + 1; i < high; i++){
+        memcpy(val, base + i * ele_size, ele_size);
+        for(j = i - 1; j >= 0 && cmp(val, base + ele_size * j) < 0; j--)
+            SWAP(base, j + 1, j, ele_size);
+        memcpy(base + (j + 1) * ele_size, val, ele_size);
+    }
+    free(val);
 }
 
 void heap_sort(void *base, int low, int high, size_t ele_size, int (*cmp)(const void *, const void *)){
