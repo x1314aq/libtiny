@@ -11,6 +11,9 @@
 
 #include <stdlib.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* 蛮力串匹配算法 */
 int bf_match(const char *t, const char *p);
@@ -38,5 +41,9 @@ void merge_sort(void *base, int low, int high, size_t ele_size, int (*cmp)(const
 
 /* 堆排序算法 */
 void heap_sort(void *base, int low, int high, size_t ele_size, int (*cmp)(const void *, const void *));
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* algorithm_h */

@@ -24,6 +24,10 @@ typedef struct{
     bitmap *_lr;       //懒惰删除标记（用bitmap实现）
 } hashmap;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 hashmap *hash_init(int maxsz);
 
 void hash_free(hashmap *hm);
@@ -33,5 +37,9 @@ void hash_put(hashmap *hm, int key, void *val);
 hashnode *hash_get(hashmap *hm, int key);
 
 void hash_rm(hashmap *hm, int key);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* hash_h */

@@ -18,6 +18,10 @@ typedef struct{
     void *_cont;
 } stack;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define stack_empty(s) (!(s)->_size)
 
 stack *stack_init(int maxsz, size_t ele_size);
@@ -29,5 +33,9 @@ void stack_pop(stack *s);
 void *stack_top(stack *s);
 
 void stack_free(stack *s);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* stack_h */

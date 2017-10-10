@@ -47,6 +47,10 @@ typedef struct map {
 
 /* API */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 map *map_create(map_type *type);
 
 int map_put(map *m, uint64_t key, void *val);
@@ -62,5 +66,9 @@ map_entry *map_find(map *m, uint64_t key);
 uint64_t _murmurHash64A(const void *key, int len, uint64_t seed);
 
 uint64_t _default_int_hash_func(uint32_t key);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //STL_MAP_H

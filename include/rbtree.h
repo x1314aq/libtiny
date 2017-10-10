@@ -11,10 +11,18 @@
 
 #include "bintree.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 TreeNode *rb_init(int ele);
 
 void rb_insert(TreeNode **root, int ele);
 
 void rb_remove(TreeNode **root, int ele);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* rbtree_h */

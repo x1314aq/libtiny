@@ -31,6 +31,10 @@ struct TreeNode{
 
 typedef struct TreeNode TreeNode;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 TreeNode *tn_init(int ele);
 
 void tn_insert_as_lc(TreeNode *root, int ele);
@@ -52,5 +56,9 @@ void bt_insert(TreeNode **root, int ele);
 void bt_remove(TreeNode **root, int ele);
 
 void bt_free(TreeNode *root);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* bintree_h */

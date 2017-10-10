@@ -21,6 +21,10 @@ typedef struct{
     size_t _ele_size;
 } heap;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 heap *heap_init(int maxsz, size_t ele_size, int (*cmp)(const void *, const void *));
 
 heap *heap_heapify(void *base, int size, size_t ele_size, int (*cmp)(const void *, const void *));
@@ -32,5 +36,9 @@ void heap_insert(heap *hp, void *ele);
 void *heap_get_max(heap *hp);
 
 void heap_rm_max(heap *hp);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* heap_h */

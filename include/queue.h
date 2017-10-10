@@ -19,6 +19,10 @@ typedef struct{
     int _top;
 } queue;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define queue_empty(q) (!(q)->_size)
 
 queue *queue_init(int maxsz);
@@ -30,5 +34,9 @@ void queue_pop(queue *q);
 void *queue_front(queue *q);
 
 void queue_free(queue *q);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* queue_h */

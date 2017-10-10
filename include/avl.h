@@ -11,9 +11,16 @@
 
 #include "bintree.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 void avl_insert(TreeNode **root, int ele);
 
 void avl_remove(TreeNode **root, int ele);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* avl_h */

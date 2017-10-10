@@ -17,6 +17,10 @@ typedef struct{
     char *m;
 } bitmap;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 bitmap *bitmap_init(int n);
 
 void bitmap_set(bitmap *bm, int k);
@@ -26,4 +30,9 @@ void bitmap_clear(bitmap *bm, int k);
 int bitmap_test(bitmap *bm, int k);
 
 void bitmap_free(bitmap *bm);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* bitmap_h */

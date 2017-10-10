@@ -9,6 +9,6 @@ file(GLOB header ${CMAKE_SOURCE_DIR}/include/*.h)
 file(GLOB src ${CMAKE_SOURCE_DIR}/src/*.c)
 
 add_library(stl STATIC ${src} ${header})
-add_executable(qwe main.c)
+add_executable(qwe main.cpp)
 
 target_link_libraries(qwe stl)
