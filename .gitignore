@@ -57,3 +57,5 @@ build*/
 cmake-build-debug/
 .idea/
 lib/
+*.c
+*.cpp
