@@ -34,6 +34,8 @@ void *stack_top(stack *s);
 
 void stack_free(stack *s);
 
+int stack_size(stack *s);
+
 #ifdef __cplusplus
 }
 #endif

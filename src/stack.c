@@ -6,6 +6,7 @@
 //  Copyright © 2017年 xaq. All rights reserved.
 //
 
+#include <stack.h>
 #include "stack.h"
 
 
@@ -40,13 +41,12 @@ void stack_push(stack *s, void *ele){
     s->_size++;
 }
 
-void stack_pop(stack *s){
+inline void stack_pop(stack *s){
     if(s->_size > 0) s->_size--;
 }
 
-void *stack_top(stack *s){
-    if(s->_size > 0) return s->_cont + (s->_size - 1) * s->_ele_size;
-    return NULL;
+inline void *stack_top(stack *s){
+    return s->_size > 0 ? s->_cont + (s->_size - 1) * s->_ele_size : NULL;
 }
 
 void stack_free(stack *s){
@@ -55,6 +55,9 @@ void stack_free(stack *s){
     free(s);
 }
 
+inline int stack_size(stack *s){
+    return s->_size;
+}
 /* ------------------------ private API implementation ---------------------- */
 void _stack_expand(stack *s){
     int new_max = s->_max << 1;
