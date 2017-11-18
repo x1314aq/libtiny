@@ -36,3 +36,8 @@ int bitmap_test(bitmap *bm, int k){
     if(k > 8 * bm->n) return -1;
     return bm->m[k >> 3] & (0x80 >> (k & 0x07));
 }
+
+void bitmap_reverse(bitmap *bm, int k){
+    if(k > 8 * bm->n) return;
+    bm->m[k >> 3] ^= (0x80 >> (k & 0x07));
+}
