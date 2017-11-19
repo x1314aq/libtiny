@@ -6,7 +6,6 @@
 //  Copyright © 2017年 xaq. All rights reserved.
 //
 
-#include <stack.h>
 #include "stack.h"
 
 
