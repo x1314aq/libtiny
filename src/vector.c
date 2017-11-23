@@ -6,7 +6,9 @@
 #include "vector.h"
 
 /* -------------------------- private prototypes ---------------------------- */
-void _expand(vector *v);
+void _expand(vector *v, size_t new_size);
+
+#define EXP_FACTOR  2
 
 /* ----------------------------- API implementation ------------------------- */
 vector *vector_init(int n, size_t ele_size){
@@ -48,7 +50,7 @@ void *vector_front(vector *v){
 
 void vector_push_back(vector *v, void *element){
     if(v->finish == v->end_of_storage)
-        _expand(v);
+        _expand(v, EXP_FACTOR * vector_capacity(v));
 
     register char *des = (char *)v->finish;
     register char *src = (char *)element;
@@ -63,9 +65,19 @@ void vector_pop_back(vector *v){
         v->value_free(v->finish);
 }
 
+void vector_resize(vector *v, size_t new_size){
+    void *old = v->start;
+    size_t cap = vector_capacity(v);
+    if(new_size > cap)
+        _expand(v, new_size);
+    else if(new_size < cap)
+        v->end_of_storage = v->finish = v->start + new_size * v->ele_size;
+    else return;
+}
+
 void vector_insert(vector *v, size_t position, void *element){
     if(v->finish == v->end_of_storage)
-        _expand(v);
+        _expand(v, EXP_FACTOR * vector_capacity(v));
 
     void *final = vector_at(v, position);
     if(final > v->finish) return;
@@ -89,16 +101,16 @@ void vector_insert(vector *v, size_t position, void *element){
 }
 
 void vector_erase(vector *v, size_t position){
-//    void *final = vector_at(v, position);
-//    if(final >= v->finish) return;
-//    if(v->value_free) v->value_free(final);
-//
-//    register char *src = (char *)(final + v->ele_size);
-//    register char *des = (char *)final;
-//
-//    while(src != v->finish) *des++ = *src++;
-//    v->finish  = des;
-    vector_erase_range(v, position, position + 1);
+    void *final = vector_at(v, position);
+    if(final >= v->finish) return;
+    if(v->value_free) v->value_free(final);
+
+    register char *src = (char *)(final + v->ele_size);
+    register char *des = (char *)final;
+
+    while(src != v->finish) *des++ = *src++;
+    v->finish  = des;
+//    vector_erase_range(v, position, position + 1);
 }
 
 void vector_erase_range(vector *v, size_t first, size_t last){
@@ -129,15 +141,15 @@ void vector_free(vector *v){
 }
 
 /* ------------------------ private API implementation ---------------------- */
-void _expand(vector *v){
+/* new_size必须大于当前vector_capacity，这是由调用者保证的，函数内部不做检查 */
+void _expand(vector *v, size_t new_size){
     void *old = v->start;
-    size_t cap = vector_capacity(v);
-    v->start = malloc((size_t)(2 * cap) * v->ele_size);
+    v->start = malloc(new_size * v->ele_size);
     memcpy(v->start, old, v->finish - old);
     if(v->value_free)
         for(void *start = old; start != v->finish; start += v->ele_size)
             v->value_free(start);
     free(old);
     v->finish = v->start + (v->finish - old);
-    v->end_of_storage = v->start + (size_t)(2 * cap) * v->ele_size;
+    v->end_of_storage = v->start + new_size * v->ele_size;
 }
