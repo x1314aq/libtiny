@@ -124,7 +124,7 @@ void vector_free(vector *v){
     if(v->value_free)
         for(; tmp != v->finish; tmp += v->ele_size)
             v->value_free(tmp);
-
+    free(v->start);
     free(v);
 }
 
@@ -132,12 +132,12 @@ void vector_free(vector *v){
 void _expand(vector *v){
     void *old = v->start;
     size_t cap = vector_capacity(v);
-    v->start = malloc((size_t)(1.5 * cap) * v->ele_size);
+    v->start = malloc((size_t)(2 * cap) * v->ele_size);
     memcpy(v->start, old, v->finish - old);
     if(v->value_free)
         for(void *start = old; start != v->finish; start += v->ele_size)
             v->value_free(start);
     free(old);
-    v->finish = v->start + cap * v->ele_size;
-    v->end_of_storage = v->start + (size_t)(1.5 * cap) * v->ele_size;
+    v->finish = v->start + (v->finish - old);
+    v->end_of_storage = v->start + (size_t)(2 * cap) * v->ele_size;
 }
