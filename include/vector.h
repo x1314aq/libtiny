@@ -41,6 +41,8 @@ void vector_push_back(vector *v, void *element);
 
 void vector_pop_back(vector *v);
 
+void vector_resize(vector *v, size_t new_size);
+
 /* 表示在position前面插入元素 */
 void vector_insert(vector *v, size_t position, void *element);
 
