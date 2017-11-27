@@ -5,19 +5,21 @@
 #include <string.h>
 #include "vector.h"
 
+#pragma GCC diagnostic ignored "-Wpointer-arith"
+
 /* -------------------------- private prototypes ---------------------------- */
 void _expand(vector *v, size_t new_size);
 
 #define EXP_FACTOR  2
 
 /* ----------------------------- API implementation ------------------------- */
-vector *vector_init(int n, size_t ele_size){
+vector *vector_init(int n, size_t ele_size, void (* value_free)(void *)){
     vector *_v = (vector *) malloc(sizeof(vector));
     _v->ele_size = ele_size;
     _v->start = malloc(n * ele_size);
     _v->finish = _v->start;
     _v->end_of_storage = _v->start + (n * ele_size);
-    _v->value_free = NULL;
+    _v->value_free = value_free;
     return _v;
 }
 
@@ -66,7 +68,6 @@ void vector_pop_back(vector *v){
 }
 
 void vector_resize(vector *v, size_t new_size){
-    void *old = v->start;
     size_t cap = vector_capacity(v);
     if(new_size > cap)
         _expand(v, new_size);

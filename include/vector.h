@@ -22,7 +22,7 @@ extern "C" {
 #endif
 
 /* Constructor */
-vector *vector_init(int n, size_t ele_size);
+vector *vector_init(int n, size_t ele_size, void (* value_free)(void *));
 
 /* Capacity */
 size_t vector_size(vector *v);
