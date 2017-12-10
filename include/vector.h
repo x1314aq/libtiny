@@ -22,7 +22,7 @@ extern "C" {
 #endif
 
 /* Constructor */
-vector *vector_init(int n, size_t ele_size, void (* value_free)(void *));
+vector *vector_init(int n, size_t ele_size);
 
 /* Capacity */
 size_t vector_size(vector *v);
@@ -42,6 +42,9 @@ void vector_push_back(vector *v, void *element);
 void vector_pop_back(vector *v);
 
 void vector_resize(vector *v, size_t new_size);
+
+/* 清空当前vector，但是保持其capacity不变 */
+void vector_clear(vector *v);
 
 /* 表示在position前面插入元素 */
 void vector_insert(vector *v, size_t position, void *element);
