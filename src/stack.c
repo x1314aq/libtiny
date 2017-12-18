@@ -51,7 +51,6 @@ inline void *stack_top(stack *s){
 void stack_free(stack *s){
     free(s->_cont);
     s->_cont = NULL;
-    free(s);
 }
 
 inline int stack_size(stack *s){

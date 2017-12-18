@@ -44,5 +44,4 @@ void queue_free(queue *q){
         free(q->_cont[i]);
     }
     free(q->_cont);
-    free(q);
 }

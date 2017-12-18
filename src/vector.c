@@ -145,7 +145,6 @@ void vector_free(vector *v){
         for(; tmp != v->finish; tmp += v->ele_size)
             v->value_free(tmp);
     free(v->start);
-    free(v);
 }
 
 /* ------------------------ private API implementation ---------------------- */

@@ -19,7 +19,6 @@ bitmap *bitmap_init(int n){
 void bitmap_free(bitmap *bm){
     free(bm->m);
     bm->m = NULL;
-    free(bm);
 }
 
 void bitmap_set(bitmap *bm, int k){

@@ -92,7 +92,6 @@ heap *heap_heapify(void *base, int size, size_t ele_size, int (*cmp)(const void 
 void heap_free(heap *hp){
     free(hp->_cont);
     hp->_cont = NULL;
-    free(hp);
 }
 
 void *heap_get_max(heap *hp){

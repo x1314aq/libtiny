@@ -48,7 +48,6 @@ void hash_free(hashmap *hm){
     bitmap_free(hm->_lr);
     hm->_cont = NULL;
     hm->_lr = NULL;
-    free(hm);
 }
 
 void hash_put(hashmap *hm, int key, void *val){

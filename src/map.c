@@ -59,7 +59,6 @@ int map_rm(map *m, uint64_t key){
 void map_free(map *m){
     _map_clear(m, &m->ht[0]);
     _map_clear(m, &m->ht[1]);
-    free(m);
 }
 
 map_entry *map_find(map *m, uint64_t key){
