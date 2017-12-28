@@ -38,8 +38,7 @@ typedef struct map_type {
 
 typedef struct map {
     map_type *type;
-    map_ht ht[2];
-    int table;
+    map_ht ht;
 } map;
 
 #define MAP_HT_INITIAL_SIZE    4
