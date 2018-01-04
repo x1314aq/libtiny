@@ -45,6 +45,22 @@ int map_put(map *m, uint64_t key, void *val){
     return SUCC;
 }
 
+int map_put_u64(map *m, uint64_t key, uint64_t val){
+    map_entry *entry = _map_put_base(m, key);
+
+    if(!entry) return ERROR;
+    entry->v.u64 = val;
+    return SUCC;
+}
+
+int map_put_s64(map *m, uint64_t key, int64_t val){
+    map_entry *entry = _map_put_base(m, key);
+
+    if(!entry) return ERROR;
+    entry->v.s64 = val;
+    return SUCC;
+}
+
 void *map_get(map *m, uint64_t key){
     map_entry *entry = _map_find(m, key);
     return entry ? entry->v.val : NULL;
@@ -119,6 +135,46 @@ uint64_t _default_string_has_func(const void *key, int len, uint64_t seed){
     h ^= h >> r;
 
     return h;
+}
+
+map_iterator *map_get_iter(map *m){
+    map_iterator *iter = malloc(sizeof(map_iterator));
+
+    iter->m = m;
+    iter->table = 0;
+    iter->index = -1;
+    iter->entry = NULL;
+    iter->next_entry = NULL;
+
+    return iter;
+}
+
+map_entry *map_iter_next(map_iterator *iter){
+    while(1){
+        if(!iter->entry){
+            map_ht *ht = &iter->m->ht[iter->table];
+            iter->index++;
+            if(iter->index >= (long) (ht->size)){
+                if(iter->table == 0){
+                    iter->table++;
+                    iter->index = 0;
+                    ht = &iter->m->ht[1];
+                } else
+                    break;
+            }
+            iter->entry = ht->buckets[iter->index];
+        } else
+            iter->entry = iter->next_entry;
+        if(iter->entry){
+            iter->next_entry = iter->entry->next;
+            return iter->entry;
+        }
+    }
+    return NULL;
+}
+
+void map_release_iter(map_iterator *iter){
+    free(iter);
 }
 
 /* ------------------------ private API implementation ---------------------- */
