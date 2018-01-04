@@ -38,10 +38,13 @@ typedef struct map_type {
 
 typedef struct map {
     map_type *type;
-    map_ht ht;
+    map_ht ht[2];    /* ht[0]存放key小于128的键值对，并且不做hash，直接访问 */
 } map;
 
-#define MAP_HT_INITIAL_SIZE    4
+#define MAP_HT0_INITIAL_SIZE   128
+#define MAP_HT1_INITIAL_SIZE   16
+#define MAP_DIRECT_ACCESS      128
+#define MAP_TREEIFY_THRESHOLD  8
 
 #define SUCC    0
 #define ERROR   1

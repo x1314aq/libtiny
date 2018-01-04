@@ -27,8 +27,6 @@ static int _map_expand_if_needed(map *m);
 
 static int _map_expand(map *m, unsigned long new_size);
 
-static unsigned long _map_next_power(unsigned long size);
-
 /* ----------------------------- API implementation ------------------------- */
 map *map_create(map_type *type){
     map *m = malloc(sizeof(map));
@@ -57,7 +55,8 @@ int map_rm(map *m, uint64_t key){
 }
 
 void map_free(map *m){
-    _map_clear(m, &m->ht);
+    _map_clear(m, &m->ht[0]);
+    _map_clear(m, &m->ht[1]);
 }
 
 map_entry *map_find(map *m, uint64_t key){
@@ -124,7 +123,14 @@ uint64_t _default_string_has_func(const void *key, int len, uint64_t seed){
 
 /* ------------------------ private API implementation ---------------------- */
 int _map_init(map *m, map_type *type){
-    _map_reset(&m->ht);
+    m->ht[0].buckets = (map_entry **) calloc(MAP_HT0_INITIAL_SIZE, sizeof(map_entry *));
+    m->ht[0].size = MAP_HT0_INITIAL_SIZE;
+    m->ht[0].size_mask = m->ht[0].size - 1;
+    m->ht[0].used = 0;
+    m->ht[1].buckets = (map_entry **) calloc(MAP_HT1_INITIAL_SIZE, sizeof(map_entry *));
+    m->ht[1].size = MAP_HT1_INITIAL_SIZE;
+    m->ht[1].size_mask = m->ht[1].size - 1;
+    m->ht[1].used = 0;
     m->type = type;
     return SUCC;
 }
@@ -161,10 +167,19 @@ map_entry *_map_put_base(map *m, uint64_t key){
     map_entry *entry;
     map_ht *ht;
 
+    if(key < MAP_DIRECT_ACCESS){
+        if(m->ht[0].buckets[key])
+            return NULL;
+        ht = &m->ht[0];
+        index = key;
+        goto END;
+    }
+
     if((index = _map_key_index(m, key)) == -1)
         return NULL;
+    ht = &m->ht[1];
 
-    ht = &m->ht;
+END:
     entry = malloc(sizeof(map_entry));
     entry->next = ht->buckets[index];
     ht->buckets[index] = entry;
@@ -181,8 +196,8 @@ int _map_key_index(map *m, uint64_t key){
     if(_map_expand_if_needed(m) == ERROR)
         return -1;
 
-    index = hash & m->ht.size_mask;
-    entry = m->ht.buckets[index];
+    index = hash & m->ht[1].size_mask;
+    entry = m->ht[1].buckets[index];
     while(entry){
         if(key == entry->key || (m->type->key_compare && m->type->key_compare(key, entry->key) == 0)){
             return -1;
@@ -194,8 +209,10 @@ int _map_key_index(map *m, uint64_t key){
 }
 
 int _map_expand_if_needed(map *m){
-    if(m->ht.size == 0) return _map_expand(m, MAP_HT_INITIAL_SIZE);
-    if(m->ht.used == m->ht.size) return _map_expand(m, m->ht.used * 2);
+    /* threshold为size的0.75倍 */
+    unsigned long threshold = (m->ht[1].size >> 1) + (m->ht[1].size >> 2);
+    if(m->ht[1].used == threshold)
+        return _map_expand(m, m->ht[1].size * 2);
 
     return SUCC;
 }
@@ -203,38 +220,28 @@ int _map_expand_if_needed(map *m){
 int _map_expand(map *m, unsigned long new_size){
     map_ht new_ht;
 
-    if(new_size == m->ht.size) return ERROR;
-
     new_ht.size = new_size;
     new_ht.size_mask = new_size - 1;
     new_ht.buckets = calloc(new_size, sizeof(map_entry *));
 
     _map_rehash(m, &new_ht);
 
-    m->ht = new_ht;
+    m->ht[1] = new_ht;
     return SUCC;
-}
-
-unsigned long _map_next_power(unsigned long size){
-    unsigned long i = MAP_HT_INITIAL_SIZE;
-
-    if(size >= LONG_MAX) return LONG_MAX;
-    while(1){
-        if(i >= size)
-            return i;
-        i *= 2;
-    }
 }
 
 map_entry *_map_find(map *m, uint64_t key){
     map_entry *entry;
     size_t hash, index;
 
-    if(m->ht.used == 0) return NULL;
+    if(m->ht[0].used + m->ht[1].used == 0) return NULL;
+
+    if(key < MAP_DIRECT_ACCESS)
+        return m->ht[0].buckets[key];
 
     hash = m->type->hash_func(&key);
-    index = hash & m->ht.size_mask;
-    entry = m->ht.buckets[index];
+    index = hash & m->ht[1].size_mask;
+    entry = m->ht[1].buckets[index];
     while(entry){
         if(key == entry->key || (m->type->key_compare && m->type->key_compare(key, entry->key) == 0))
             return entry;
@@ -247,22 +254,34 @@ map_entry *_map_rm_base(map *m, uint64_t key){
     size_t hash, index;
     map_entry *entry, *prev_entry;
 
-    if(m->ht.used == 0) return NULL;
+    if(m->ht[0].used + m->ht[1].used == 0) return NULL;
+
+    if(key < MAP_DIRECT_ACCESS){
+        entry = m->ht[0].buckets[key];
+        if(entry){
+            if(m->type->value_free)
+                m->type->value_free(entry);
+            free(entry);
+            m->ht[0].used--;
+            return entry;
+        }
+        return NULL;
+    }
 
     hash = m->type->hash_func(&key);
-    index = hash & m->ht.size_mask;
-    entry = m->ht.buckets[index];
+    index = hash & m->ht[1].size_mask;
+    entry = m->ht[1].buckets[index];
     prev_entry = NULL;
     while(entry){
         if(key == entry->key || (m->type->key_compare && m->type->key_compare(key, entry->key) == 0)){
             if(prev_entry)
                 prev_entry->next = entry->next;
             else
-                m->ht.buckets[index] = entry->next;
+                m->ht[1].buckets[index] = entry->next;
             if(m->type->value_free)
                 m->type->value_free(entry->v.val);
             free(entry);
-            m->ht.used--;
+            m->ht[1].used--;
             return entry;
         }
         prev_entry = entry;
@@ -275,9 +294,9 @@ void _map_rehash(map *m, map_ht *new_ht){
     size_t hash, index;
     unsigned long i;
 
-    for(i = 0; i < m->ht.size; i++){
+    for(i = 0; i < m->ht[1].size; i++){
         map_entry *entry, *next_entry;
-        if((entry = m->ht.buckets[i]) != NULL){
+        if((entry = m->ht[1].buckets[i]) != NULL){
             while(entry){
                 next_entry = entry->next;
                 entry->next = NULL;
@@ -290,6 +309,6 @@ void _map_rehash(map *m, map_ht *new_ht){
             }
         }
     }
-    new_ht->used = m->ht.used;
-    free(m->ht.buckets);
+    new_ht->used = m->ht[1].used;
+    free(m->ht[1].buckets);
 }
