@@ -97,6 +97,7 @@ void vector_insert(vector *v, size_t position, void *element){
         void *ret = (void *)des;
         while(src != final)
             *des-- = *src--;
+        *des = *src;
 
         /* 插入新元素 */
         des = final;
