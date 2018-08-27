@@ -54,8 +54,7 @@ Mkfile.old
 dkms.conf
 
 build*/
-cmake-build-debug/
-cmake-build-release/
+cmake-build-*/
 .idea/
 lib/
 *.cpp
