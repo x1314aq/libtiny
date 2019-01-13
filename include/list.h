@@ -1,5 +1,5 @@
 //
-// Created by 叶鑫 on 2018/8/28.
+// Created by x1314aq on 2018/8/28.
 //
 
 /**
@@ -8,8 +8,8 @@
  * @ref: https://www.ibm.com/developerworks/cn/linux/kernel/l-chain/index.html
  */
 
-#ifndef STL_LIST_H
-#define STL_LIST_H
+#ifndef _LIBTINY_LIST_H_
+#define _LIBTINY_LIST_H_
 
 #include "common.h"
 
@@ -18,6 +18,7 @@ struct list_entry {
     struct list_entry *prev, *next;
 };
 
+BEGIN_DECL
 
 /**
  * Declare a list head and initialize to empty.
@@ -57,37 +58,37 @@ __list_add(struct list_entry *new,
 }
 
 /**
- * Insert a new list entry *new* after list head.
+ * Insert a new list entry *after* current position.
  *
  * @param new
  *   List entry to be inserted.
- * @param head
- *   List head after which *new* will be inserted.
+ * @param cur
+ *   Current position after which *new* will be inserted.
  */
 static inline void
-list_add_head(struct list_entry *new,
-              struct list_entry *head)
+list_add_after(struct list_entry *new,
+               struct list_entry *cur)
 {
-    __list_add(new, head, head->next);
+    __list_add(new, cur, cur->next);
 }
 
 /**
- * Insert a new list entry *new* before list tail.
+ * Insert a new list entry *before* current position.
  *
  * @param new
  *   List entry to be inserted.
- * @param head
- *   List tail (.aka. head->prev) before which *new* will be inserted.
+ * @param cur
+ *   Current position before which *new* will be inserted.
  */
 static inline void
-list_add_tail(struct list_entry *new,
-              struct list_entry *head)
+list_add_before(struct list_entry *new,
+                struct list_entry *cur)
 {
-    __list_add(new, head->prev, head);
+    __list_add(new, cur->prev, cur);
 }
 
 /**
- * Internal list manipulation. Range deletion between (prev, next).
+ * Internal list manipulation, range deletion between (prev, next).
  *
  * @param prev
  *   Start point of delete operation.
@@ -109,7 +110,7 @@ __list_del(struct list_entry *prev,
  *   List entry to be deleted.
  */
 static inline void
-list_del_entry(struct list_entry *entry)
+list_delete(struct list_entry *entry)
 {
     __list_del(entry->prev, entry->next);
     list_head_init(entry);
@@ -121,7 +122,7 @@ list_del_entry(struct list_entry *entry)
  * @param head
  *   List head to be judged.
  * @return
-     *   - 1 if empty.
+ *   - 1 if empty.
  *   - 0 if not empty.
  */
 static inline int
@@ -140,7 +141,7 @@ list_empty(struct list_entry *head)
  * @return
  *   Pointer to structure *type*
  */
-#define LIST_ENTRY(ptr, type)  container_of(prt, type, list_entry)
+#define LIST_ENTRY(ptr, type)  container_of(ptr, type, list_entry)
 
 /**
  * Macro used to *traverse* the whole list.
@@ -164,4 +165,6 @@ list_empty(struct list_entry *head)
 #define LIST_FOR_EACH_REVERSE(pos, head)  \
     for(pos = (head)->prev; pos != (head); pos = pos->prev)
 
-#endif //STL_LIST_H
+END_DECL
+
+#endif //_LIBTINY_LIST_H_

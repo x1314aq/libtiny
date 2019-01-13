@@ -1,5 +1,5 @@
 //
-// Created by 叶鑫 on 2018/9/1.
+// Created by x1314aq on 2018/9/1.
 //
 
 /**
@@ -7,19 +7,21 @@
  * @ref: https://blog.csdn.net/zhanglei4214/article/details/6767288
  */
 
-#ifndef STL_HLIST_H
-#define STL_HLIST_H
+#ifndef _LIBTINY_HLIST_H_
+#define _LIBTINY_HLIST_H_
 
 #include "common.h"
 
 
-struct hlist_node {
-    struct hlist_node *next, **pprev;
+struct hlist_entry {
+    struct hlist_entry *next, **pprev;
 };
 
 struct hlist_head {
-    struct hlist_node *first;
+    struct hlist_entry *first;
 };
+
+BEGIN_DECL
 
 /**
  * Declare a hash list head and initialize to NULL.
@@ -34,10 +36,10 @@ struct hlist_head {
  *   Node to be deleted;
  */
 static inline void
-hlist_del(struct hlist_node *node)
+hlist_del(struct hlist_entry *node)
 {
-    struct hlist_node *next = node->next;
-    struct hlist_node **pprev = node->pprev;
+    struct hlist_entry *next = node->next;
+    struct hlist_entry **pprev = node->pprev;
     *pprev = next;
     if(next)
         next->pprev = pprev;
@@ -54,10 +56,10 @@ hlist_del(struct hlist_node *node)
  *   Hash list head.
  */
 static inline void
-hlist_add_head(struct hlist_node *new,
+hlist_add_head(struct hlist_entry *new,
                struct hlist_head *head)
 {
-    struct hlist_node *first = head->first;
+    struct hlist_entry *first = head->first;
     new->next = first;
     if(first)
         first->pprev = &new->next;
@@ -70,16 +72,16 @@ hlist_add_head(struct hlist_node *new,
  *
  * @param new
  *   New node to be added.
- * @param current
+ * @param cur
  *   Current node before which the new node will be inserted.
  */
 static inline void
-hlist_add_before(struct hlist_node *new,
-                 struct hlist_node *current)
+hlist_add_before(struct hlist_entry *new,
+                 struct hlist_entry *cur)
 {
-    new->next = current;
-    new->pprev = current->pprev;
-    current->pprev = &new->next;
+    new->next = cur;
+    new->pprev = cur->pprev;
+    cur->pprev = &new->next;
     *(new->pprev) = new;
 }
 
@@ -88,16 +90,16 @@ hlist_add_before(struct hlist_node *new,
  *
  * @param new
  *   New node to be added.
- * @param current
+ * @param cur
  *   Current node after which the new node will be inserted.
  */
 static inline void
-hlist_add_after(struct hlist_node *new,
-                struct hlist_node *current)
+hlist_add_after(struct hlist_entry *new,
+                struct hlist_entry *cur)
 {
-    new->next = current->next;
-    current->next = new;
-    new->pprev = &current->next;
+    new->next = cur->next;
+    cur->next = new;
+    new->pprev = &cur->next;
     if(new->next)
         new->next->pprev = &new->next;
 }
@@ -127,7 +129,7 @@ hlist_empty(struct hlist_head *head)
  * @return
  *   Pointer to structure *type*.
  */
-#define HLIST_ENTRY(ptr, type)    container_of(ptr, type, hlist_node)
+#define HLIST_ENTRY(ptr, type)    container_of(ptr, type, hlist_entry)
 
 /**
  * Macro used to *reversely traverse* the whole list.
@@ -140,4 +142,6 @@ hlist_empty(struct hlist_head *head)
 #define HLIST_FOR_EACH(pos, head)  \
     for(pos = (head)->first; pos; pos = pos->next)
 
-#endif //STL_HLIST_H
+END_DECL
+
+#endif //_LIBTINY_HLIST_H_
