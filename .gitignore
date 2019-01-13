@@ -57,6 +57,5 @@ build*/
 cmake-build-*/
 .idea/
 lib/
-*.cpp
 Debug/
 Release/
