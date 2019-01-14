@@ -1,15 +1,11 @@
 //
-//  hash.h
-//  my_stl
-//
-//  Created by 叶鑫 on 2017/7/25.
-//  Copyright © 2017年 xaq. All rights reserved.
+//  Created by x1314aq on 2017/7/25.
 //
 
-#ifndef hash_h
-#define hash_h
+#ifndef _LIBTINY_HASH_H_
+#define _LIBTINY_HASH_H_
 
-#include <stdlib.h>
+#include "common.h"
 #include "bitmap.h"
 
 typedef struct{
@@ -24,9 +20,7 @@ typedef struct{
     bitmap *_lr;       //懒惰删除标记（用bitmap实现）
 } hashmap;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+BEGIN_DECL
 
 hashmap *hash_init(int maxsz);
 
@@ -38,8 +32,6 @@ hashnode *hash_get(hashmap *hm, int key);
 
 void hash_rm(hashmap *hm, int key);
 
-#ifdef __cplusplus
-}
-#endif
+END_DECL
 
-#endif /* hash_h */
+#endif // _LIBTINY_HASH_H_

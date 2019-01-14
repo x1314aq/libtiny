@@ -1,12 +1,11 @@
 //
-// Created by xaq on 10/9/17.
+// Created by x1314aq on 2017/10/9.
 //
 
-#include <stdint.h>
-#include <stddef.h>
+#include "common.h"
 
-#ifndef STL_MAP_H
-#define STL_MAP_H
+#ifndef _LIBTINY_MAP_H_
+#define _LIBTINY_MAP_H_
 
 typedef struct map_entry
 {
@@ -69,9 +68,7 @@ typedef struct map_iterator
 
 /* API */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+BEGIN_DECL
 
 map *map_create(map_type *type);
 
@@ -99,8 +96,6 @@ map_entry *map_iter_next(map_iterator *iter);
 
 void map_release_iter(map_iterator *iter);
 
-#ifdef __cplusplus
-}
-#endif
+END_DECL
 
-#endif //STL_MAP_H
+#endif // _LIBTINY_MAP_H_

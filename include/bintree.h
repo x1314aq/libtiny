@@ -1,15 +1,11 @@
 //
-//  bintree.h
-//  my_stl
-//
-//  Created by 叶鑫 on 2017/7/22.
-//  Copyright © 2017年 xaq. All rights reserved.
+//  Created by x1314aq on 2017/7/22.
 //
 
-#ifndef bintree_h
-#define bintree_h
+#ifndef _LIBTINY_BINTREE_H_
+#define _LIBTINY_BINTREE_H_
 
-#include <stdlib.h>
+#include "common.h"
 
 
 #define max(x, y) ((x) > (y) ? (x) : (y))
@@ -31,9 +27,7 @@ struct TreeNode{
 
 typedef struct TreeNode TreeNode;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+BEGIN_DECL
 
 TreeNode *tn_init(int ele);
 
@@ -57,8 +51,6 @@ void bt_remove(TreeNode **root, int ele);
 
 void bt_free(TreeNode *root);
 
-#ifdef __cplusplus
-}
-#endif
+END_DECL
 
-#endif /* bintree_h */
+#endif // _LIBTINY_BINTREE_H_

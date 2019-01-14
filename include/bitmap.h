@@ -1,15 +1,11 @@
 //
-//  bitmap.h
-//  my_stl
-//
-//  Created by 叶鑫 on 2017/7/25.
-//  Copyright © 2017年 xaq. All rights reserved.
+//  Created by x1314aq on 2017/7/25.
 //
 
-#ifndef bitmap_h
-#define bitmap_h
+#ifndef _LIBTINY_BITMAP_H_
+#define _LIBTINY_BITMAP_H_
 
-#include <stdlib.h>
+#include "common.h"
 
 
 typedef struct{
@@ -17,9 +13,7 @@ typedef struct{
     char *m;
 } bitmap;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+BEGIN_DECL
 
 /* 初始化bitmap，默认所有bit都是0 */
 bitmap *bitmap_init(int n);
@@ -39,8 +33,6 @@ void bitmap_reverse(bitmap *bm, int k);
 /* 释放所用的空间 */
 void bitmap_free(bitmap *bm);
 
-#ifdef __cplusplus
-}
-#endif
+END_DECL
 
-#endif /* bitmap_h */
+#endif // _LIBTINY_BITMAP_H_

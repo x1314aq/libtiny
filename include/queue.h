@@ -1,15 +1,11 @@
 //
-//  queue.h
-//  my_stl
-//
-//  Created by 叶鑫 on 2017/7/22.
-//  Copyright © 2017年 xaq. All rights reserved.
+//  Created by x1314aq on 2017/7/22.
 //
 
-#ifndef queue_h
-#define queue_h
+#ifndef _LIBTINY_QUEUE_H_
+#define _LIBTINY_QUEUE_H_
 
-#include <stdlib.h>
+#include "common.h"
 
 typedef struct{
     int _max;
@@ -19,9 +15,7 @@ typedef struct{
     int _top;
 } queue;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+BEGIN_DECL
 
 #define queue_empty(q) (!(q)->_size)
 
@@ -35,8 +29,6 @@ void *queue_front(queue *q);
 
 void queue_free(queue *q);
 
-#ifdef __cplusplus
-}
-#endif
+END_DECL
 
-#endif /* queue_h */
+#endif // _LIBTINY_QUEUE_H_

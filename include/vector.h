@@ -1,11 +1,11 @@
 //
-// Created by xaq on 11/19/17.
+// Created by x1314aq on 11/19/17.
 //
 
-#ifndef TTQ_VECTOR_H
-#define TTQ_VECTOR_H
+#ifndef _LIBTINY_VECTOR_H_
+#define _LIBTINY_VECTOR_H_
 
-#include <stdlib.h>
+#include "common.h"
 
 typedef struct
 {
@@ -17,9 +17,7 @@ typedef struct
     void (*value_free)(void *);
 } vector;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+BEGIN_DECL
 
 /* Constructor */
 vector *vector_init(int n, size_t ele_size);
@@ -56,8 +54,6 @@ void vector_erase_range(vector *v, size_t first, size_t last);
 /* destructor */
 void vector_free(vector *v);
 
-#ifdef __cplusplus
-}
-#endif
+END_DECL
 
-#endif //TTQ_VECTOR_H
+#endif //_LIBTINY_VECTOR_H_

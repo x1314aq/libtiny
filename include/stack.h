@@ -1,15 +1,11 @@
 //
-//  stack.h
-//  my_stl
-//
-//  Created by 叶鑫 on 2017/7/22.
-//  Copyright © 2017年 xaq. All rights reserved.
+//  Created by x1314aq on 2017/7/22.
 //
 
-#ifndef stack_h
-#define stack_h
+#ifndef _LIBTINY_STACK_H_
+#define _LIBTINY_STACK_H_
 
-#include <stdlib.h>
+#include "common.h"
 
 typedef struct{
     int _max;
@@ -20,9 +16,7 @@ typedef struct{
 
 #define stack_empty(s) (!(s)->_size)
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+BEGIN_DECL
 
 stack *stack_init(size_t ele_size);
 
@@ -36,8 +30,6 @@ void stack_free(stack *s);
 
 int stack_size(stack *s);
 
-#ifdef __cplusplus
-}
-#endif
+END_DECL
 
-#endif /* stack_h */
+#endif // _LIBTINY_STACK_H_

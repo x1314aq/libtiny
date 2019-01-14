@@ -1,15 +1,11 @@
 //
-//  heap.h
-//  my_stl
-//
-//  Created by 叶鑫 on 2017/7/24.
-//  Copyright © 2017年 xaq. All rights reserved.
+//  Created by x1314aq on 2017/7/24.
 //
 
-#ifndef heap_h
-#define heap_h
+#ifndef _LIBTINY_HEAP_H_
+#define _LIBTINY_HEAP_H_
 
-#include <stdlib.h>
+#include "common.h"
 
 
 /* 大顶堆 */
@@ -21,9 +17,7 @@ typedef struct{
     size_t _ele_size;
 } heap;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+BEGIN_DECL
 
 heap *heap_init(int maxsz, size_t ele_size, int (*cmp)(const void *, const void *));
 
@@ -37,8 +31,6 @@ void *heap_get_max(heap *hp);
 
 void heap_rm_max(heap *hp);
 
-#ifdef __cplusplus
-}
-#endif
+END_DECL
 
-#endif /* heap_h */
+#endif // _LIBTINY_HEAP_H_

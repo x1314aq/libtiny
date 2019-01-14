@@ -1,9 +1,9 @@
 //
-// Created by 叶鑫 on 2018/9/22.
+// Created by x1314aq on 2018/9/22.
 //
 
-#ifndef STL_MEMPOOL_H
-#define STL_MEMPOOL_H
+#ifndef _LIBTINY_MEMPOOL_H_
+#define _LIBTINY_MEMPOOL_H_
 
 #include "common.h"
 
@@ -23,6 +23,8 @@ struct mempool {
     uint8_t *end;
     uint8_t *heap_size;
 };
+
+BEGIN_DECL
 
 static inline size_t
 round_up(size_t x)
@@ -45,4 +47,6 @@ mempool_dealloc(struct mempool *mp,
                 void *p,
                 size_t n);
 
-#endif //STL_MEMPOOL_H
+END_DECL
+
+#endif // _LIBTINY_MEMPOOL_H_

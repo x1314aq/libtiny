@@ -1,26 +1,19 @@
 //
-//  avl.h
-//  my_stl
-//
-//  Created by 叶鑫 on 2017/7/22.
-//  Copyright © 2017年 xaq. All rights reserved.
+//  Created by x1314aq on 2017/7/22.
 //
 
-#ifndef avl_h
-#define avl_h
+#ifndef _LIBTINY_AVL_H_
+#define _LIBTINY_AVL_H_
 
 #include "bintree.h"
+#include "common.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+BEGIN_DECL
 
 void avl_insert(TreeNode **root, int ele);
 
 void avl_remove(TreeNode **root, int ele);
 
-#ifdef __cplusplus
-}
-#endif
+END_DECL
 
-#endif /* avl_h */
+#endif //_LIBTINY_AVL_H_

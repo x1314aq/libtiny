@@ -1,13 +1,14 @@
 //
-// Created by 叶鑫 on 2018/8/27.
+// Created by x1314aq on 2018/8/27.
 //
 
-#ifndef STL_COMMON_H
-#define STL_COMMON_H
+#ifndef _LIBTINY_COMMON_H_
+#define _LIBTINY_COMMON_H_
 
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <stddef.h>
 #include <ctype.h>
 #include <errno.h>
 #include <string.h>
@@ -173,4 +174,4 @@ stl_atomic32_cmpset(volatile uint32_t *dst, uint32_t exp, uint32_t src)
 
 END_DECL
 
-#endif //STL_COMMON_H
+#endif // _LIBTINY_COMMON_H_

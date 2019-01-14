@@ -1,9 +1,9 @@
 //
-// Created by 叶鑫 on 2018/9/1.
+// Created by x1314aq on 2018/9/1.
 //
 
-#ifndef STL_RINGBUF_H
-#define STL_RINGBUF_H
+#ifndef _LIBTINY_RINGBUF_H_
+#define _LIBTINY_RINGBUF_H_
 
 #include "common.h"
 
@@ -87,6 +87,7 @@ struct ringbuf {
 } while(0)
 
 BEGIN_DECL
+
 /**
  * Create a new ringbuf named *name* in memory.
  *
@@ -466,4 +467,5 @@ ringbuf_empty(const struct ringbuf *rb)
 }
 
 END_DECL
-#endif //STL_RINGBUF_H
+
+#endif // _LIBTINY_RINGBUF_H_

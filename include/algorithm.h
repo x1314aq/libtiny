@@ -1,19 +1,13 @@
 //
-//  algorithm.h
-//  my_stl
-//
-//  Created by 叶鑫 on 2017/7/26.
-//  Copyright © 2017年 xaq. All rights reserved.
+//  Created by x1314aq on 2017/7/26.
 //
 
-#ifndef algorithm_h
-#define algorithm_h
+#ifndef _LIBTINY_ALGORITHM_H_
+#define _LIBTINY_ALGORITHM_H_
 
-#include <stdlib.h>
+#include "common.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+BEGIN_DECL
 
 /* 蛮力串匹配算法 */
 int bf_match(const char *t, const char *p);
@@ -42,8 +36,6 @@ void merge_sort(void *base, int low, int high, size_t ele_size, int (*cmp)(const
 /* 堆排序算法 */
 void heap_sort(void *base, int low, int high, size_t ele_size, int (*cmp)(const void *, const void *));
 
-#ifdef __cplusplus
-}
-#endif
+END_DECL
 
-#endif /* algorithm_h */
+#endif // _LIBTINY_ALGORITHM_H_

@@ -1,19 +1,13 @@
 //
-//  rbtree.h
-//  my_stl
-//
-//  Created by 叶鑫 on 2017/7/22.
-//  Copyright © 2017年 xaq. All rights reserved.
+//  Created by x1314aq on 2017/7/22.
 //
 
-#ifndef rbtree_h
-#define rbtree_h
+#ifndef _LIBTINY_RBTREE_H_
+#define _LIBTINY_RBTREE_H_
 
 #include "bintree.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+BEGIN_DECL
 
 TreeNode *rb_init(int ele);
 
@@ -21,8 +15,6 @@ void rb_insert(TreeNode **root, int ele);
 
 void rb_remove(TreeNode **root, int ele);
 
-#ifdef __cplusplus
-}
-#endif
+END_DECL
 
-#endif /* rbtree_h */
+#endif // _LIBTINY_RBTREE_H_
