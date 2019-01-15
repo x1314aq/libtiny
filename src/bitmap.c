@@ -1,9 +1,5 @@
 //
-//  bitmap.c
-//  my_stl
-//
-//  Created by 叶鑫 on 2017/7/25.
-//  Copyright © 2017年 xaq. All rights reserved.
+//  Created by x1314aq on 2017/7/25.
 //
 
 #include "bitmap.h"

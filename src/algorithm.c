@@ -1,18 +1,11 @@
 //
-//  algorithm.c
-//  my_stl
-//
-//  Created by 叶鑫 on 2017/7/26.
-//  Copyright © 2017年 xaq. All rights reserved.
+//  Created by x1314aq on 2017/7/26.
 //
 
 #include "algorithm.h"
-#include <string.h>
 #include "heap.h"
 
 
-#define min(x, y) ((x) < (y) ? (x) : (y))
-#define max(x, y) ((x) > (y) ? (x) : (y))
 #define UINT_MAX  0xFFFFFFFF
 
 
@@ -36,7 +29,7 @@ int *build_ss(const char *p){
         if((low < j) && (ss[m - high + j - 1] <= j - low)) ss[j] = ss[m - high + j - 1];
         else{
             high = j;
-            low = min(low, high);
+            low = MIN(low, high);
             while((low >= 0) && (p[low] == p[m - high + low - 1])) low--;
             ss[j] = high - low;
         }
@@ -119,7 +112,7 @@ int bm_match(const char *t, const char *p){
         while(p[j] == t[i + j])
             if(0 > --j) break;
         if(0 > j) break;
-        else i += max(gs[j], j - bc[t[i + j]]);
+        else i += MAX(gs[j], j - bc[t[i + j]]);
     }
     free(bc);
     free(gs);
@@ -286,7 +279,7 @@ void merge_sort(void *base, int low, int high, size_t ele_size, int (*cmp)(const
     int remainder = 0;
     for(int width = 1; width < high - low; width = 2 * width){
         for(int start = 0; start < high - low; start += 2 * width){
-            int lo = start, mid = min(start + width, high - low), hi = min(start + 2 * width, high - low);
+            int lo = start, mid = MIN(start + width, high - low), hi = MIN(start + 2 * width, high - low);
             if(mid == (high - low)) remainder = start;
             int k = lo;
             int start1 = lo, end1 = mid;

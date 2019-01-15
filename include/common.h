@@ -13,6 +13,7 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
+#include "limits.h"
 
 
 #ifndef offsetof
@@ -35,6 +36,14 @@
 
 #ifndef unlikely
 #define unlikely(x)  __builtin_expect((x),0)
+#endif
+
+#ifndef
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
+#endif
+
+#ifndef
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
 #endif
 
 #ifndef __CACHE_ALIGNED

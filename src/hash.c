@@ -1,16 +1,10 @@
 //
-//  hash.c
-//  my_stl
-//
-//  Created by 叶鑫 on 2017/7/25.
-//  Copyright © 2017年 xaq. All rights reserved.
+//  Created by x1314aq on 2017/7/25.
 //
 
 #include "hash.h"
-#include <string.h>
 
 
-#define min(x, y) ((x) < (y) ? (x) : (y))
 /* 返回[c, n)之间不小于c的最小素数 */
 int primeNLT(int c, int n){
     bitmap *bm = bitmap_init(n);
@@ -18,7 +12,7 @@ int primeNLT(int c, int n){
     bitmap_set(bm, 1);
     for(int i = 2; i < n; i++){
         if(!bitmap_test(bm, i)){
-            for(int j = min(i, 46340) * min(i, 46340); j < n; j += i){
+            for(int j = MIN(i, 46340) * MIN(i, 46340); j < n; j += i){
                 bitmap_set(bm, j);
             }
         }

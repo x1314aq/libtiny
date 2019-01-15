@@ -1,9 +1,5 @@
 //
-//  bintree.c
-//  my_stl
-//
-//  Created by 叶鑫 on 2017/7/22.
-//  Copyright © 2017年 xaq. All rights reserved.
+//  Created by x1314aq on 2017/7/22.
 //
 
 #include "bintree.h"
@@ -47,7 +43,7 @@ int bt_update_depth(TreeNode *root){
     if(!root) return 0;
     int ldep = bt_update_depth(root->left);
     int rdep = bt_update_depth(root->right);
-    int dep = max(ldep, rdep) + 1;
+    int dep = MAX(ldep, rdep) + 1;
     root->depth = dep;
     return dep;
 }

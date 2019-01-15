@@ -8,9 +8,6 @@
 #include "common.h"
 
 
-#define max(x, y) ((x) > (y) ? (x) : (y))
-
-
 typedef enum{
     RB_RED,
     RB_BLACK

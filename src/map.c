@@ -1,10 +1,8 @@
 //
-// Created by xaq on 10/9/17.
+// Created by x1314aq on 2017/10/9.
 //
 
 #include "map.h"
-#include <stdlib.h>
-#include <limits.h>
 
 /* -------------------------- private prototypes ---------------------------- */
 static int _map_init(map *m, map_type *type);
