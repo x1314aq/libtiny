@@ -120,18 +120,6 @@ hlist_empty(struct hlist_head *head)
 }
 
 /**
- * Macro used to retrieve address of structure *type*
- *
- * @param ptr
- *   Pointer to hlist node field in structure *type*.
- * @param type
- *   Structure which contains list_entry field.
- * @return
- *   Pointer to structure *type*.
- */
-#define HLIST_ENTRY(ptr, type)    container_of(ptr, type, hlist_entry)
-
-/**
  * Macro used to *reversely traverse* the whole list.
  *
  * @param pos

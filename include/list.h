@@ -132,18 +132,6 @@ list_empty(struct list_entry *head)
 }
 
 /**
- * Macro used to retrieve address of structure *type*.
- *
- * @param ptr
- *   Pointer to list_entry field in structure *type*;
- * @param type
- *   Structure which contains list_entry field;
- * @return
- *   Pointer to structure *type*
- */
-#define LIST_ENTRY(ptr, type)  container_of(ptr, type, list_entry)
-
-/**
  * Macro used to *traverse* the whole list.
  *
  * @param pos
