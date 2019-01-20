@@ -56,6 +56,7 @@ dkms.conf
 build*/
 cmake-build-*/
 .idea/
-lib/
 Debug/
+debug/
 Release/
+release/
