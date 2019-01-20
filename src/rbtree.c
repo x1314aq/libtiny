@@ -69,7 +69,8 @@ void rb_insert_color(struct rb_node *n, struct rb_root *root)
                  */
                 s = p->right;
                 g->left = s;
-                rb_set_parent(s, g);
+                if(s)
+                    rb_set_parent_color(s, g, RB_BLACK);
                 p->right = g;
                 gg = rb_parent(g);
                 rb_set_parent_color(p, gg, RB_BLACK);
@@ -94,7 +95,8 @@ void rb_insert_color(struct rb_node *n, struct rb_root *root)
              * S   n          S       U
              */
             p->right = n->left;
-            rb_set_parent(n->left, p);
+            if(n->left)
+                rb_set_parent_color(n->left, p, RB_BLACK);
             n->left = p;
             rb_set_parent(p, n);
             gg = rb_parent(g);
@@ -108,7 +110,8 @@ void rb_insert_color(struct rb_node *n, struct rb_root *root)
             else
                 root->node = n;
             g->left = n->right;
-            rb_set_parent(n->right, g);
+            if(n->right)
+                rb_set_parent_color(n->right, g, RB_BLACK);
             n->right = g;
             rb_set_parent_color(g, n, RB_RED);
         }
@@ -126,7 +129,8 @@ void rb_insert_color(struct rb_node *n, struct rb_root *root)
             if(n == p->right) {
                 s = p->left;
                 g->right = s;
-                rb_set_parent(s, g);
+                if(s)
+                    rb_set_parent_color(s, g, RB_BLACK);
                 p->left = g;
                 gg = rb_parent(g);
                 rb_set_parent_color(p, gg, RB_BLACK);
@@ -143,7 +147,8 @@ void rb_insert_color(struct rb_node *n, struct rb_root *root)
             }
 
             p->left = n->right;
-            rb_set_parent(n->right, p);
+            if(n->right)
+                rb_set_parent_color(n->right, p, RB_BLACK);
             n->right = p;
             rb_set_parent(p, n);
             gg = rb_parent(g);
@@ -157,7 +162,8 @@ void rb_insert_color(struct rb_node *n, struct rb_root *root)
             else
                 root->node = n;
             g->right = n->left;
-            rb_set_parent(n->left, g);
+            if(n->left)
+                rb_set_parent_color(n->left, g, RB_BLACK);
             n->left = g;
             rb_set_parent_color(g, n, RB_RED);
         }
@@ -393,7 +399,7 @@ void rb_erase(struct rb_node *n, struct rb_root *root)
             child = successor->right;
             parent->left = child;
             successor->right = c;
-            rb_set_parent(child, parent);
+            rb_set_parent(c, successor);
         }
         successor->left = n->left;
         rb_set_parent(n->left, successor);
