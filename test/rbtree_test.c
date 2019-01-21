@@ -47,22 +47,31 @@ int main(int argc, char *argv[])
 
     for(i = 0; i < NUMBER; i++) {
         nodes[i].key = rand();
-        printf("%u ", nodes[i].key);
         insert(&nodes[i], &root);
+        if(rb_is_red(root.node))
+            printf("insert error at index:%d\n", i);
     }
 
     for(node = rb_first(&root); node; node = rb_next(node)) {
         test = container_of(node, struct test_node, rb);
-        printf("%u ", test->key);
+        printf("%u\n", test->key);
     }
 
+    puts("---------------");
+    
     for(node = rb_last(&root); node; node = rb_prev(node)) {
         test = container_of(node, struct test_node, rb);
-        printf("%u ", test->key);
+        printf("%u\n", test->key);
     }
 
-    for(i = 0; i < NUMBER; i++)
+    for(i = 0; i < NUMBER - 1; i++) {
         erase(&nodes[i], &root);
-
+        if(rb_is_red(root.node))
+            printf("erase error at index:%d\n", i);
+    }
+    
+    if(root.node != &nodes[NUMBER - 1].rb)
+        puts("Error!\n");
+    
     return 0;
 }
