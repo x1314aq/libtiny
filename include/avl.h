@@ -9,9 +9,10 @@
 
 
 struct avl_node {
-    unsigned long parent_balance;
+    struct avl_node *parent;
     struct avl_node *left;
     struct avl_node *right;
+    int height;
 };
 
 struct avl_root {
@@ -20,30 +21,26 @@ struct avl_root {
 
 /// balance factor = left subtree - right subtree
 
-#define avl_is_balanced(n)     (((n)->parent_balance & 3) == 0)
-#define avl_left_dominant(n)   (((n)->parent_balance & 3) == 1)
-#define avl_right_dominant(n)  (((n)->parent_balance & 3) == 3)
-
 BEGIN_DECL
 
 static inline void
 avl_link_node(struct avl_node *n, struct avl_node *p, struct avl_node **avl_link)
 {
-    n->parent_balance = (unsigned long) p;
+    n->parent = p;
     n->left = n->right = NULL;
     *avl_link = n;
 }
 
-void avl_insert_rotate(struct avl_node *, struct avl_root *);
+void avl_insert_rotate(struct avl_node *node, struct avl_root *root);
 
-void avl_erase(struct avl_node *, struct avl_root *);
+void avl_erase(struct avl_node *node, struct avl_root *root);
 
-void avl_replace_node(struct avl_node *, struct avl_node *, struct avl_root *);
+void avl_replace_node(struct avl_node *old, struct avl_node *new, struct avl_root *root);
 
-struct avl_node *avl_next(struct avl_node *);
-struct avl_node *avl_prev(struct avl_node *);
-struct avl_node *avl_first(struct avl_root *);
-struct avl_node *avl_last(struct avl_root *);
+struct avl_node *avl_next(const struct avl_node *node);
+struct avl_node *avl_prev(const struct avl_node *node);
+struct avl_node *avl_first(const struct avl_root *root);
+struct avl_node *avl_last(const struct avl_root *root);
 
 END_DECL
 
