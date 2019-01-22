@@ -77,16 +77,16 @@ rb_link_node(struct rb_node *n, struct rb_node *p, struct rb_node **rb_link)
     *rb_link = n;
 }
 
-void rb_insert_color(struct rb_node *, struct rb_root *);
+void rb_insert_color(struct rb_node *node, struct rb_root *root);
 
-void rb_erase(struct rb_node *, struct rb_root *);
+void rb_erase(struct rb_node *node, struct rb_root *root);
 
-void rb_replace_node(struct rb_node *, struct rb_node *, struct rb_root *);
+void rb_replace_node(struct rb_node *old, struct rb_node *new, struct rb_root *root);
 
-struct rb_node *rb_next(const struct rb_node *);
-struct rb_node *rb_prev(const struct rb_node *);
-struct rb_node *rb_first(const struct rb_root *);
-struct rb_node *rb_last(const struct rb_root *);
+struct rb_node *rb_next(const struct rb_node *node);
+struct rb_node *rb_prev(const struct rb_node *node);
+struct rb_node *rb_first(const struct rb_root *root);
+struct rb_node *rb_last(const struct rb_root *root);
 
 END_DECL
 
