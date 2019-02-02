@@ -4,17 +4,14 @@
 
 #include "avl.h"
 #include "list.h"
+#include "mempool.h"
 
 
 struct map_entry {
     struct avl_node node;
     uint64_t hash;
     void *key;
-    union {
-        void *val;
-        uint64_t u64;
-        int64_t s64;
-    } v;
+    void *val;
 };
 
 struct map_bucket {
@@ -24,37 +21,54 @@ struct map_bucket {
 
 struct map_type {
     uint64_t (*hash_func)(const void *key);
-    int (*key_compare)(uint64_t key1, uint64_t key2);
+    int (*key_compare)(const void *key1, const void *key2);
 };
 
 struct map {
     uint64_t size;                 /// power of 2, number of map_bucket
     uint64_t mask;                 /// size - 1
     uint64_t used;                 /// number of entries we have
-    struct map_type *type;         /// operations
+    struct map_type type;          /// operations
     struct map_bucket *buckets;    /// buckets/slots
     struct list_entry head;        /// point to first/last non-empty map_bucket
+    struct mempool mp;             /// mempool used for fast alloc/dealloc
 };
 
-void avl_map_init(struct map *map, struct map_type *type);
+int
+avl_map_init(struct map *map, struct map_type *type);
 
-struct map_entry *avl_map_first(struct map *map);
-struct map_entry *avl_map_last(struct map *map);
-struct map_entry *avl_map_next(struct map *map, struct map_entry *entry);
-struct map_entry *avl_map_prev(struct map *map, struct map_entry *entry);
+void
+avl_map_destroy(struct map *map);
 
-struct map_entry *avl_map_find(struct map *map, const void *key);
+struct map_entry *
+avl_map_first(struct map *map);
+
+struct map_entry *
+avl_map_last(struct map *map);
+
+struct map_entry *
+avl_map_next(struct map *map, struct map_entry *entry);
+
+struct map_entry *
+avl_map_prev(struct map *map, struct map_entry *entry);
+
+struct map_entry *
+avl_map_find(struct map *map, const void *key);
 
 /**
- * Do not allow duplicate nodes to be inserted
+ * Insert K-V pair to map
+ * Do not allow duplicate entry to be inserted
  *
  * @return
  *   0: success
- *  -1: fail
+ *  -1: fail, duplicate entry was found
  */
-int avl_map_insert(struct map *map, struct map_entry *entry);
+int
+avl_map_insert(struct map *map, const void *key, const void *value);
 
 /**
  * Erase K-V pair from map
+ * Call avl_map_find() before erasing because we expect the entry does exactly exist
  */
-void avl_map_erase(struct map *map, struct map_entry *entry);
+void
+avl_map_erase(struct map *map, struct map_entry *entry);

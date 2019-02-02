@@ -7,19 +7,30 @@
 
 #define MAP_INIT_SIZE    16
 
-void avl_map_init(struct map *m, struct map_type *type)
+int avl_map_init(struct map *m, struct map_type *type)
 {
     m->size = MAP_INIT_SIZE;
     m->mask = m->size - 1;
     m->used = 0;
-    m->type = type;
+    m->type.hash_func = type->hash_func;
+    m->type.key_compare = type->key_compare;
     list_head_init(&m->head);
-    m->buckets = (struct map_bucket *) malloc(sizeof(struct map_bucket) * MAP_INIT_SIZE);
+    mempool_init(&m->mp);
+    m->buckets = (struct map_bucket *) malloc(m->size * sizeof(struct map_bucket));
+    if(!m->buckets)
+        return -1;
 
     for(uint64_t i = 0; i < m->size; i++) {
         m->buckets[i].root.node = NULL;
         list_head_init(&(m->buckets[i].entry));
     }
+    return 0;
+}
+
+void avl_map_destroy(struct map *m)
+{
+    mempool_destroy(&m->mp);
+    free(m->buckets);
 }
 
 struct map_entry *avl_map_first(struct map *m)
@@ -98,7 +109,7 @@ struct map_entry *avl_map_prev(struct map *m, struct map_entry *e)
 
 struct map_entry *avl_map_find(struct map *m, const void *k)
 {
-    uint64_t hash = m->type->hash_func(k);
+    uint64_t hash = m->type.hash_func(k);
     struct map_bucket *bucket = &m->buckets[hash & m->mask];
     struct avl_node *node = bucket->root.node;
     struct map_entry *e;
@@ -106,7 +117,7 @@ struct map_entry *avl_map_find(struct map *m, const void *k)
     while(node) {
         e = container_of(node, struct map_entry, node);
         if(e->hash == hash) {
-            int res = m->type->key_compare(k, e->key);
+            int res = m->type.key_compare(k, e->key);
             if(res == 0)
                 return e;
             node = res < 0 ? node->left : node->right;
@@ -117,13 +128,16 @@ struct map_entry *avl_map_find(struct map *m, const void *k)
     return NULL;
 }
 
-int avl_map_insert(struct map *m, struct map_entry *e)
+int avl_map_insert(struct map *m, const void *k, const void *v)
 {
-    uint64_t hash = m->type->hash_func(e->key);
+    uint64_t hash = m->type.hash_func(k);
     struct map_bucket *bucket = &m->buckets[hash & m->mask];
+    struct map_entry *e = mempool_alloc(&m->mp, sizeof(struct map_entry));
     struct map_entry *entry;
 
     e->hash = hash;
+    e->key = k;
+    e->val = v;
 
     if(bucket->root.node) {
         struct avl_node **new, *parent;
@@ -134,9 +148,11 @@ int avl_map_insert(struct map *m, struct map_entry *e)
             parent = *new;
             entry = container_of(parent, struct map_entry, node);
             if(entry->hash == hash) {
-                int res = m->type->key_compare(e->key, entry->key);
-                if(res == 0)    /// found duplicate entry
+                int res = m->type.key_compare(k, entry->key);
+                if(res == 0) {   /// found duplicate entry
+                    mempool_dealloc(&m->mp, e, sizeof(struct map_entry));
                     return -1;
+                }
                 new = res < 0 ? &parent->left : &parent->right;
             }
             else
@@ -146,6 +162,7 @@ int avl_map_insert(struct map *m, struct map_entry *e)
         avl_insert_rotate(&e->node, &bucket->root);
     }
     else {
+        bucket->root.node = &e->node;
         e->node.left = NULL;
         e->node.right = NULL;
         e->node.parent = NULL;
@@ -168,8 +185,6 @@ void avl_map_erase(struct map *m, struct map_entry *e)
     }
     else
         avl_erase(&e->node, &bucket->root);
-    e->node.left = NULL;
-    e->node.right = NULL;
-    e->node.parent = NULL;
+    mempool_dealloc(&m->mp, e, sizeof(struct map_entry));
     m->used--;
 }
