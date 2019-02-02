@@ -60,3 +60,4 @@ Debug/
 debug/
 Release/
 release/
+test/*_test
