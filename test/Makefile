@@ -4,7 +4,7 @@ C_FLAGS := -Wall -Wextra -g -O0
 INC_DIR := $(abspath ../include)
 LINK_DIR := $(abspath ../build)
 LIBS := tiny
-APPS := rbtree_test avl_test
+APPS := rbtree_test avl_test avl_map_test
 
 .PHONY: all
 all: $(APPS)
@@ -13,6 +13,9 @@ rbtree_test: rbtree_test.c
 	$(CC) $(C_FLAGS) -I$(INC_DIR) -L$(LINK_DIR) -Wl,-rpath $(LINK_DIR) $< -l$(LIBS) -o $@
 
 avl_test: avl_test.c
+	$(CC) $(C_FLAGS) -I$(INC_DIR) -L$(LINK_DIR) -Wl,-rpath $(LINK_DIR) $< -l$(LIBS) -o $@
+
+avl_map_test: avl_map_test.c
 	$(CC) $(C_FLAGS) -I$(INC_DIR) -L$(LINK_DIR) -Wl,-rpath $(LINK_DIR) $< -l$(LIBS) -o $@
 
 .PHONY: clean
