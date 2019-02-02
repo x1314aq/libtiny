@@ -65,7 +65,7 @@ __refill(struct mempool *mp, size_t n)
 {
     int nobjs = NUM_OBJS;
     char *chunk;
-    char **free_list;
+    union obj **free_list;
     union obj *cur, *next;
 
     chunk = __chunk_alloc(mp, n, &nobjs);
