@@ -42,13 +42,14 @@ struct ringbuf *
 ringbuf_create(const char *name,
                unsigned size)
 {
-    struct ringbuf *rb;
+    struct ringbuf *rb = NULL;
     ssize_t rb_size;
 
-    if(rb_size = __get_memsize(size)) {
+    if((rb_size = __get_memsize(size))) {
         errno = -EINVAL;
         return NULL;
     }
 
+    strcpy(rb->name, name);
     return rb;
 }

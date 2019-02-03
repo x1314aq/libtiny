@@ -6,17 +6,16 @@
 #include "heap.h"
 
 
-#define UINT_MAX  0xFFFFFFFF
-
-
+/*
 int *build_bc(const char *p){
     int *bc = malloc(256 * sizeof(int));
-    for(size_t i = 0; i < 256; i++){
+    for(int i = 0; i < 256; i++){
         bc[i] = -1;
     }
-    size_t m = strlen(p);
+    int m = strlen(p);
     for(int j = 0; j < m; j++){
-        bc[p[j]] = j;
+        unsigned char c = p[j];
+        bc[c] = j;
     }
     return bc;
 }
@@ -39,10 +38,11 @@ int *build_ss(const char *p){
 
 int *build_gs(const char *p){
     int *ss = build_ss(p);
-    size_t m = strlen(p);
+    int m = strlen(p);
     int *gs = malloc(m * sizeof(int));
-    for(size_t j = 0; j < m; j++) gs[j] = (int)m;
-    for(size_t i = 0, j = m - 1; j < UINT_MAX; j--){
+    for(int j = 0; j < m; j++)
+        gs[j] = m;
+    for(int i = 0, j = m - 1; j < UINT_MAX; j--){
         if(j + 1 == ss[j]){
             while(i < m - j - 1) gs[i++] = (int)(m - j - 1);
         }
@@ -53,6 +53,7 @@ int *build_gs(const char *p){
     free(ss);
     return gs;
 }
+ */
 
 int *build_next(const char *p){
     size_t m = strlen(p), j = 0;
@@ -103,6 +104,7 @@ int kmp_match(const char *t, const char *p){
     return i - j;
 }
 
+/*
 int bm_match(const char *t, const char *p){
     int *bc = build_bc(p);
     int *gs = build_gs(p);
@@ -118,6 +120,7 @@ int bm_match(const char *t, const char *p){
     free(gs);
     return i;
 }
+ */
 
 /* 逐字节的交换两个元素的值 */
 #define SWAP(base, a, b, size)               \

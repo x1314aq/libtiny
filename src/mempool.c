@@ -97,6 +97,7 @@ mempool_init(struct mempool *mp)
 void
 mempool_destroy(struct mempool *mp)
 {
+    mp->heap_size = 0;
     return;
 }
 

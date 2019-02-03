@@ -64,7 +64,7 @@ avl_map_find(struct map *map, const void *key);
  *  -1: fail, duplicate entry was found
  */
 int
-avl_map_insert(struct map *map, const void *key, const void *value);
+avl_map_insert(struct map *map, void *key, void *value);
 
 /**
  * Erase K-V pair from map

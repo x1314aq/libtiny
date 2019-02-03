@@ -128,7 +128,7 @@ struct map_entry *avl_map_find(struct map *m, const void *k)
     return NULL;
 }
 
-int avl_map_insert(struct map *m, const void *k, const void *v)
+int avl_map_insert(struct map *m, void *k, void *v)
 {
     uint64_t hash = m->type.hash_func(k);
     struct map_bucket *bucket = &m->buckets[hash & m->mask];
