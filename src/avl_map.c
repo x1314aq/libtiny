@@ -31,6 +31,11 @@ void avl_map_destroy(struct map *m)
 {
     mempool_destroy(&m->mp);
     free(m->buckets);
+    list_head_init(&m->head);
+    m->buckets = NULL;
+    m->size = 0;
+    m->mask = 0;
+    m->used = 0;
 }
 
 struct map_entry *avl_map_first(struct map *m)

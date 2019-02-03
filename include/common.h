@@ -39,11 +39,17 @@
 #endif
 
 #ifndef MIN
-#define MIN(x, y) ((x) < (y) ? (x) : (y))
+#define MIN(x, y) ({    \
+        const typeof(x) _x = (x);    \
+        const typeof(y) _y = (y);    \
+        _x < _y ? _x : _y;})
 #endif
 
 #ifndef MAX
-#define MAX(x, y) ((x) > (y) ? (x) : (y))
+#define MAX(x, y) ({    \
+        const typeof(x) _x = (x);    \
+        const typeof(y) _y = (y);    \
+        _x > _y ? _x : _y;})
 #endif
 
 #ifndef __CACHE_ALIGNED

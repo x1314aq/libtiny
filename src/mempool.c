@@ -8,6 +8,9 @@
 #define MEM_THRESHOLD    NUM_FREE_LIST * ALIGN
 #define NUM_OBJS         32
 
+static void *__addr[32];
+static uint8_t __addr_index;
+
 /**
  * Round up to multiple of ALIGN
  */
@@ -48,6 +51,7 @@ __chunk_alloc(struct mempool *mp, size_t n, int *m)
             *free_list = (union obj *) mp->start;
         }
         mp->start = (char *) malloc(bytes_to_get);
+        __addr[__addr_index++] = mp->start;   /// record alloc point
         if(!mp->start) {
             *m = 0;
             return NULL;
@@ -97,8 +101,11 @@ mempool_init(struct mempool *mp)
 void
 mempool_destroy(struct mempool *mp)
 {
-    mp->heap_size = 0;
-    return;
+    uint8_t i;
+    for(i = 0; i < __addr_index; i++)
+        free(__addr[i]);
+    __addr_index = 0;
+    mempool_init(mp);
 }
 
 void *
