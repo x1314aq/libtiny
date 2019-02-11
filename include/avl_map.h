@@ -27,7 +27,8 @@ struct map_type {
 struct map {
     uint64_t size;                 /// power of 2, number of map_bucket
     uint64_t mask;                 /// size - 1
-    uint64_t used;                 /// number of entries we have
+    uint64_t index;                /// index of highest tree
+    int height;                    /// maximum height of all AVL trees
     struct map_type type;          /// operations
     struct map_bucket *buckets;    /// buckets/slots
     struct list_entry head;        /// point to first/last non-empty map_bucket
