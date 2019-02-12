@@ -11,6 +11,7 @@
 #define ALIGN          8
 #define ALIGN_MASK     (ALIGN - 1)
 #define NUM_FREE_LIST  16
+#define MAX_ALLOC      32
 
 union obj {
     union obj *next;
@@ -22,6 +23,8 @@ struct mempool {
     char *start;
     char *end;
     size_t heap_size;
+    void *addr[MAX_ALLOC];
+    uint8_t index;
 };
 
 BEGIN_DECL
