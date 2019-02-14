@@ -9,10 +9,6 @@ struct test_node {
     struct avl_node avl;
 };
 
-#define NUMBER    10000
-
-static struct test_node nodes[NUMBER];
-
 static void insert(struct test_node *node, struct avl_root *root)
 {
     struct avl_node **new = &root->node;
@@ -38,14 +34,39 @@ static inline void erase(struct test_node *node, struct avl_root *root)
     avl_erase(&node->avl, root);
 }
 
+static inline void print_usage()
+{
+    puts("Usage: avl_test -n <NUMBER>   default: 10000");
+}
+
 int main(int argc, char *argv[])
 {
-    int i;
-    struct test_node *test;
+    int i, c, number = 10000;
+    struct test_node *test, *nodes;
     struct avl_node *node;
     struct avl_root root = { NULL };
 
-    for(i = 0; i < NUMBER; i++) {
+    while((c = getopt(argc, argv, "hn:")) != -1) {
+        switch(c) {
+            case 'n':
+                number = atoi(optarg);
+                break;
+            case 'h':
+            case '?':
+            default:
+                print_usage();
+                return 0;
+        }
+    }
+
+    if(number < 0) {
+        printf("negative node NUMBER: %d\n", number);
+        return 1;
+    }
+
+    nodes = (struct test_node *) calloc(number, sizeof(struct test_node));
+
+    for(i = 0; i < number; i++) {
         nodes[i].key = rand();
         insert(&nodes[i], &root);
     }
@@ -56,17 +77,21 @@ int main(int argc, char *argv[])
     }
 
     puts("---------------");
-    
+
     for(node = avl_last(&root); node; node = avl_prev(node)) {
         test = container_of(node, struct test_node, avl);
         printf("%u\n", test->key);
     }
 
-    for(i = 0; i < NUMBER - 1; i++)
+    for(i = 0; i < number - 1; i++)
         erase(&nodes[i], &root);
-    
-    if(root.node != &nodes[NUMBER - 1].avl)
+
+    if(root.node != &nodes[number - 1].avl) {
         puts("Error!\n");
-    
+        free(nodes);
+        return 1;
+    }
+
+    free(nodes);
     return 0;
 }

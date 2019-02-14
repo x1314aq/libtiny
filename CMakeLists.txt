@@ -26,3 +26,6 @@ endif()
 file(GLOB SRC ${CMAKE_SOURCE_DIR}/src/*.c)
 
 add_library(tiny SHARED ${SRC})
+
+enable_testing()
+add_subdirectory(test)
