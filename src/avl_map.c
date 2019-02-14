@@ -61,6 +61,7 @@ static inline void __rehash(struct map *m)
     new_buckets = (struct map_bucket *) malloc(new_size * sizeof(struct map_bucket));
     if(!new_buckets)
         return;
+    memset(new_buckets, 0, new_size * sizeof(struct map_bucket));
 
     list_head_init(&new_head);
 
