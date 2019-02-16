@@ -10,6 +10,7 @@ if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
 elseif (CMAKE_C_COMPILER_ID STREQUAL "GNU")
     message(STATUS  "Compiler: GCC")
     set(gcc ON CACHE BOOL "use GCC compiler")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-implicit-fallthrough")
 endif()
 
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fsanitize=address -fno-omit-frame-pointer")
