@@ -36,12 +36,12 @@ static inline void erase(struct test_node *node, struct avl_root *root)
 
 static inline void print_usage()
 {
-    puts("Usage: avl_test -n <NUMBER>   default: 10000");
+    puts("Usage: avl_test -n <NUMBER>   default: 1000000");
 }
 
 int main(int argc, char *argv[])
 {
-    int i, c, number = 10000;
+    int i, c, number = 1000000;
     struct test_node *test, *nodes;
     struct avl_node *node;
     struct avl_root root = { NULL };

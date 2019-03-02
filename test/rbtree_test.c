@@ -36,12 +36,12 @@ static inline void erase(struct test_node *node, struct rb_root *root)
 
 static inline void print_usage()
 {
-    puts("Usage: rbtree_test -n <NUMBER>   default: 10000");
+    puts("Usage: rbtree_test -n <NUMBER>   default: 1000000");
 }
 
 int main(int argc, char *argv[])
 {
-    int i, c, number = 10000;
+    int i, c, number = 1000000;
     struct test_node *test, *nodes;
     struct rb_node *node;
     struct rb_root root = { NULL };

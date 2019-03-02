@@ -19,7 +19,7 @@ static int test_cmp(const void *key1, const void *key2)
 
 static inline void print_usage()
 {
-    puts("Usage: avl_map_test -n <NUMBER>   default: 10000");
+    puts("Usage: avl_map_test -n <NUMBER>   default: 1000000");
 }
 
 int main(int argc, char *argv[])
