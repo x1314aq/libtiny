@@ -253,4 +253,36 @@ static const double HASH_UPPER = 0.77;
 #define hash_insert(name, h, k, v)   hash_insert_##name(h, k, v)
 #define hash_erase(name, h, i)       hash_erase_##name(h, i)
 
+/**
+ * signed or unsigned 32-bit integer hash function
+ */
+#define default_int32_hash_func(key)    ((uint32_t) key)
+#define default_int32_hash_equal(a, b)  ((a) == (b))
+#define alter_int32_hash_func(key)    ({    \
+        uint32_t k = (uint32_t) key;    \
+        k += ~(k << 15);    \
+        k ^=  (k >> 10);    \
+        k +=  (k << 3);    \
+        k ^=  (k >> 6);    \
+        k += ~(k << 11);    \
+        k ^=  (k >> 16);    \
+        k;})
+
+/**
+ * signed or unsigned 64-bit integer hash function
+ */
+#define default_int64_hash_func(key)    ((uint32_t) ((key) >> 33 ^ (key) ^ (key) << 11))
+#define default_int64_hash_equal(a, b)  ((a) == (b))
+
+/**
+ * DJB2 string hash function
+ */
+#define default_string_hash_func(s)     ({    \
+        uint32_t h = 5381;    \
+        int c;    \
+        while(c = *s++)    \
+            h = ((h << 5) + h) +c;    \
+        h;})
+#define default_string_hash_equal(a, b)   (strcmp(a, b) == 0)
+
 #endif // _LIBTINY_HASH_H_

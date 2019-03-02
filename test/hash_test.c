@@ -6,16 +6,12 @@
 
 HASH_DECLARE(test, int, int);
 
-#define int_hash_func(key)    ((uint32_t) key)
-#define int_hash_equal(a, b)    ((a) == (b))
-
-HASH_IMPL(test, int, int, int_hash_func, int_hash_equal);
+HASH_IMPL(test, int, int, default_int32_hash_func, default_int32_hash_equal);
 
 static inline void print_usage()
 {
     puts("Usage: hash_test -n <NUMBER>   default: 1000000");
 }
-
 
 int main(int argc, char *argv[])
 {
