@@ -67,8 +67,6 @@
  */
 #define __bitmap_size(n)       ((n) < 4 ? 1 : (n) >> 2)
 
-static const double HASH_UPPER = 0.77;
-
 /**
  * roundup to power of two, 32-bit unsigned int version
  */
@@ -80,6 +78,9 @@ static const double HASH_UPPER = 0.77;
         (x) |= (x) >> 8;    \
         (x) |= (x) >> 16;    \
         ++(x);})
+
+static const double HASH_UPPER = 0.77;
+typedef uint32_t hash_iter_t;
 
 #define HASH_DECLARE(name, key_t, val_t)    \
     struct hash_##name {    \
@@ -129,9 +130,10 @@ static const double HASH_UPPER = 0.77;
         memset(h->flags, 0xAA, __bitmap_size(h->n_buckets));    \
         h->size = h->n_occupied = 0;    \
     }   \
-    static inline uint32_t hash_find_##name(struct hash_##name *h, key_t key)    \
+    static inline hash_iter_t hash_find_##name(struct hash_##name *h, key_t key)    \
     {   \
-        uint32_t i, hash, last, mask, step = 0;    \
+        hash_iter_t i, last;    \
+        uint32_t hash, mask, step = 0;    \
         mask = h->n_buckets - 1;    \
         hash = hash_func(key);    \
         last = i = hash & mask;    \
@@ -217,8 +219,8 @@ static const double HASH_UPPER = 0.77;
             else if(hash_rehash_##name(h, h->n_buckets + 1) < 0)    \
                 return -2;    \
         }    \
-        uint32_t i, step = 0, mask = h->n_buckets - 1;    \
-        uint32_t last;    \
+        uint32_t step = 0, mask = h->n_buckets - 1;    \
+        hash_iter_t i, last;    \
         i = hash_func(key) & mask;    \
         last = i;    \
         while(__is_valid(h->flags, i)) {    \
@@ -237,14 +239,23 @@ static const double HASH_UPPER = 0.77;
         h->size++;    \
         return 0;    \
     }   \
-    static inline void hash_erase_##name(struct hash_##name *h, uint32_t i)    \
+    static inline void hash_erase_##name(struct hash_##name *h, hash_iter_t i)    \
     {   \
-        if(i < h->n_buckets && __is_valid(h->flags, i)) {    \
-            __set_delete(h->flags, i);    \
-            --h->size;    \
-        }    \
+        __set_delete(h->flags, i);    \
+        --h->size;    \
+    }    \
+    static inline key_t hash_get_key_##name(struct hash_##name *h, hash_iter_t i)    \
+    {    \
+        return (key_t) h->keys[i];    \
+    }    \
+    static inline val_t hash_get_val_##name(struct hash_##name *h, hash_iter_t i)    \
+    {    \
+        return (val_t) h->vals[i];    \
     }
 
+/**
+ * public API specification
+ */
 #define hash_t(name)                 struct hash_##name
 #define hash_init(name)              hash_init_##name()
 #define hash_destroy(name, h)        hash_destroy_##name(h)
@@ -252,6 +263,13 @@ static const double HASH_UPPER = 0.77;
 #define hash_find(name, h, k)        hash_find_##name(h, k)
 #define hash_insert(name, h, k, v)   hash_insert_##name(h, k, v)
 #define hash_erase(name, h, i)       hash_erase_##name(h, i)
+#define hash_get_key(name, h, i)     hash_get_key_##name(h, i)
+#define hash_get_val(name, h, i)     hash_get_val_##name(h, i)
+#define hash_size(name, h)           (h->size)
+#define hash_empty(name, h)          (h->size == 0)
+#define hash_valid(name, h, i)       (i < h->n_buckets && __is_valid(h->flags, i))
+/* end */
+
 
 /**
  * signed or unsigned 32-bit integer hash function
@@ -259,14 +277,14 @@ static const double HASH_UPPER = 0.77;
 #define default_int32_hash_func(key)    ((uint32_t) key)
 #define default_int32_hash_equal(a, b)  ((a) == (b))
 #define alter_int32_hash_func(key)    ({    \
-        uint32_t k = (uint32_t) key;    \
-        k += ~(k << 15);    \
-        k ^=  (k >> 10);    \
-        k +=  (k << 3);    \
-        k ^=  (k >> 6);    \
-        k += ~(k << 11);    \
-        k ^=  (k >> 16);    \
-        k;})
+        uint32_t _k = (uint32_t) key;    \
+        _k += ~(_k << 15);    \
+        _k ^=  (_k >> 10);    \
+        _k +=  (_k << 3);    \
+        _k ^=  (_k >> 6);    \
+        _k += ~(_k << 11);    \
+        _k ^=  (_k >> 16);    \
+        _k;})
 
 /**
  * signed or unsigned 64-bit integer hash function
@@ -278,11 +296,12 @@ static const double HASH_UPPER = 0.77;
  * DJB2 string hash function
  */
 #define default_string_hash_func(s)     ({    \
-        uint32_t h = 5381;    \
-        int c;    \
-        while(c = *s++)    \
-            h = ((h << 5) + h) +c;    \
-        h;})
+        char *_s = (char *) s;    \
+        uint32_t _h = 5381;    \
+        int _c;    \
+        while((_c = *_s++))    \
+            _h = ((_h << 5) + _h) + _c;    \
+        _h;})
 #define default_string_hash_equal(a, b)   (strcmp(a, b) == 0)
 
 #endif // _LIBTINY_HASH_H_
