@@ -106,16 +106,24 @@ typedef uint32_t hash_iter_t;
         h->size = h->n_occupied = 0;    \
         h->n_buckets = 4;    \
         h->flags = malloc(__bitmap_size(h->n_buckets));    \
-        if(!h->flags)    \
+        if(!h->flags) {    \
+            free(h);    \
             return NULL;    \
+        }    \
         h->flags[0] = 0xAA;    \
         h->upper_bound = (uint32_t) (4 * HASH_UPPER + 0.5);    \
         h->keys = malloc(4 * sizeof(key_t));    \
-        if(!h->keys)    \
+        if(!h->keys) {    \
+            free(h->flags);    \
+            free(h);    \
             return NULL;    \
+        }    \
         h->vals = malloc(4 * sizeof(val_t));    \
-        if(!h->vals)    \
-            return NULL;    \
+        if(!h->vals) {    \
+            free(h->flags);    \
+            free(h->keys);    \
+            free(h);    \
+        }    \
         return h;    \
     }   \
     static inline void hash_destroy_##name(struct hash_##name *h)    \
