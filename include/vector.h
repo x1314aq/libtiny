@@ -50,13 +50,13 @@
             if(vec_resize_##name(v))    \
                 return -1;    \
         }    \
-        v->room[v->n++] = ele;    \
+        v->room[v->num++] = ele;    \
         return 0;    \
     }    \
     static inline type vec_pop_##name(struct vec_##name *v)    \
     {    \
-        return v->room[--v->n];    \
-    }    \
+        return v->room[--v->num];    \
+    }
 
 /**
  * public API sepcification
