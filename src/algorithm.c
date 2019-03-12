@@ -256,14 +256,16 @@ void insertion_sort(void *base, int low, int high, size_t ele_size, int (*cmp)(c
     free(val);
 }
 
-void heap_sort(void *base, int low, int high, size_t ele_size, int (*cmp)(const void *, const void *)){
-    if(high - low < 2) return;
-    heap *hp = heap_heapify(base, high - low, ele_size, cmp);
-    while(--high > low){
-        heap_rm_max(hp);
-    }
-    free(hp);
-}
+/*
+ * void heap_sort(void *base, int low, int high, size_t ele_size, int (*cmp)(const void *, const void *)){
+ *     if(high - low < 2) return;
+ *     heap *hp = heap_heapify(base, high - low, ele_size, cmp);
+ *     while(--high > low){
+ *         heap_rm_max(hp);
+ *     }
+ *     free(hp);
+ * }
+ */
 
 #define MEMCPY(src, des, size)           \
     do{                                  \

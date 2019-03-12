@@ -96,6 +96,49 @@
         type temp = h->room[0];    \
         heap_percolate_down_##name(h, h->room[--h->num]);    \
         return temp;    \
+    }    \
+    static inline void heap_make_##name(type *start, type *end)    \
+    {    \
+        size_t num = ((char *) end - (char *) start) / sizeof(type);    \
+        if(num < 2)    \
+            return;    \
+        size_t index = (num - 2) << 1;    \
+        type ele = start[index];    \
+        while(1) {    \
+            size_t index2 = index;    \
+            size_t next = index2 * 2 + 2;    \
+            while(next < num) {    \
+                if(lt_func(start[next], start[next - 1]))    \
+                    next--;    \
+                start[index2] = start[next];    \
+                index2 = next;    \
+                next = __rc(index2);    \
+            }    \
+            if(next == num) {    \
+                start[index2] = start[next - 1];    \
+                index2 = next - 1;    \
+            }    \
+            next = __pa(index2);    \
+            while(index2 > index && lt_func(start[next], ele)) {    \
+                start[index2] = start[next];    \
+                index2 = next;    \
+                next = __pa(index2);    \
+            }    \
+            start[index2] = ele;    \
+            if(index == 0)    \
+                return;    \
+            index--;    \
+            ele = start[index];    \
+        }    \
+    }    \
+    static inline type *heap_sort_##name(struct heap_##name *h)    \
+    {    \
+        while(h->num > 1) {    \
+            type temp = h->room[0];    \
+            heap_percolate_down_##name(h, h->room[--h->num]);    \
+            h->room[h->num] = temp;    \
+        }    \
+        return h->room;    \
     }
 
 /**
@@ -106,5 +149,7 @@
 #define heap_destroy(name, h)    heap_destroy_##name(h)
 #define heap_push(name, h, ele)  heap_push_##name(h, ele)
 #define heap_pop(name, h)        heap_pop_##name(h)
+#define heap_make(name, s, e)    heap_make_##name(s, e)
+#define heap_sort(name, h)       heap_sort_##name(h)
 
 #endif // _LIBTINY_HEAP_H_
