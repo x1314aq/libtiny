@@ -19,6 +19,10 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE  "Release")
 endif()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_definitions(-D_FORTIFY_SOURCE=2)
+endif()
+
 # Check platform
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     cmake_policy(SET  CMP0042 NEW)
