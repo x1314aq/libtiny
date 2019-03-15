@@ -97,9 +97,8 @@
         heap_percolate_down_##name(h, h->room[--h->num]);    \
         return temp;    \
     }    \
-    static inline void heap_make_##name(type *start, type *end)    \
+    static inline void heap_make_##name(type *start, int num)    \
     {    \
-        int num = ((char *) end - (char *) start) / sizeof(type);    \
         if(num < 2)    \
             return;    \
         int index = (num - 2) / 2;    \
@@ -131,14 +130,15 @@
             ele = start[index];    \
         }    \
     }    \
-    static inline type *heap_sort_##name(struct heap_##name *h)    \
+    static inline void heap_sort_##name(type *start, int num)    \
     {    \
-        while(h->num > 1) {    \
-            type temp = h->room[0];    \
-            heap_percolate_down_##name(h, h->room[--h->num]);    \
-            h->room[h->num] = temp;    \
+        struct heap_##name h = { .num = num, .max = num, .room = start };    \
+        heap_make_##name(start, num);    \
+        while(h.num > 1) {    \
+            type temp = h.room[0];    \
+            heap_percolate_down_##name(&h, h.room[--h.num]);    \
+            h.room[h.num] = temp;    \
         }    \
-        return h->room;    \
     }
 
 /**
@@ -149,7 +149,7 @@
 #define heap_destroy(name, h)    heap_destroy_##name(h)
 #define heap_push(name, h, ele)  heap_push_##name(h, ele)
 #define heap_pop(name, h)        heap_pop_##name(h)
-#define heap_make(name, s, e)    heap_make_##name(s, e)
-#define heap_sort(name, h)       heap_sort_##name(h)
+#define heap_make(name, s, n)    heap_make_##name(s, n)
+#define heap_sort(name, s, n)    heap_sort_##name(s, n)
 
 #endif // _LIBTINY_HEAP_H_

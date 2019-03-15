@@ -62,14 +62,7 @@ int main(int argc, char *argv[])
             printf("error1 at %d\n", i);
     }
 
-    int *end = (int *) ((char *) arr3 + number * sizeof(int));
-    heap_make(test1, arr3, end);
-    heap_t(test1) temp = {
-        .num = number,
-        .max = number,
-        .room = arr3
-    };
-    heap_sort(test1, &temp);
+    heap_sort(test1, arr3, number);
     for(int i = 0; i < number; i++) {
         arr3[i] -= arr1[i];
         if(arr3[i] != 0)
