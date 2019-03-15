@@ -9,12 +9,12 @@
 
 #define __lc(i)    (2 * (i) + 1)
 #define __rc(i)    (2 * ((i) + 1))
-#define __pa(i)    (((i) - 1) << 1)
+#define __pa(i)    (((i) - 1) / 2)
 
 #define HEAP_DECLARE(name, type)    \
     struct heap_##name {    \
-        size_t num;    \
-        size_t max;    \
+        int num;    \
+        int max;    \
         type *room;    \
     }
 
@@ -40,8 +40,8 @@
     }    \
     static inline void heap_percolate_up_##name(struct heap_##name *h, type ele)    \
     {    \
-        size_t index = h->num++;    \
-        size_t next = __pa(index);    \
+        int index = h->num++;    \
+        int next = __pa(index);    \
         while(index > 0 && lt_func(h->room[next], ele)) {    \
             h->room[index] = h->room[next];    \
             index = next;    \
@@ -51,8 +51,8 @@
     }    \
     static inline void heap_percolate_down_##name(struct heap_##name *h, type ele)    \
     {    \
-        size_t index = 0;    \
-        size_t next = 2;    \
+        int index = 0;    \
+        int next = 2;    \
         while(next < h->num) {    \
             if(lt_func(h->room[next], h->room[next - 1]))    \
                 next--;    \
@@ -74,7 +74,7 @@
     }    \
     static inline int heap_resize_##name(struct heap_##name *h)    \
     {    \
-        size_t new_max = h->max + h->max >> 1;    \
+        int new_max = h->max + (h->max >> 1);    \
         void *temp = realloc(h->room, sizeof(type) * new_max);    \
         if(!temp)    \
             return -1;    \
@@ -99,14 +99,14 @@
     }    \
     static inline void heap_make_##name(type *start, type *end)    \
     {    \
-        size_t num = ((char *) end - (char *) start) / sizeof(type);    \
+        int num = ((char *) end - (char *) start) / sizeof(type);    \
         if(num < 2)    \
             return;    \
-        size_t index = (num - 2) << 1;    \
+        int index = (num - 2) / 2;    \
         type ele = start[index];    \
         while(1) {    \
-            size_t index2 = index;    \
-            size_t next = index2 * 2 + 2;    \
+            int index2 = index;    \
+            int next = index2 * 2 + 2;    \
             while(next < num) {    \
                 if(lt_func(start[next], start[next - 1]))    \
                     next--;    \
