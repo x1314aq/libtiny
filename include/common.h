@@ -13,7 +13,7 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
-#include "limits.h"
+#include <limits.h>
 
 
 #ifndef offsetof
@@ -31,11 +31,11 @@
 #endif
 
 #ifndef likely
-#define likely(x)  __builtin_expect(!!(x),1)
+#define likely(x)  __builtin_expect(!!(x), 1)
 #endif
 
 #ifndef unlikely
-#define unlikely(x)  __builtin_expect(!!(x),0)
+#define unlikely(x)  __builtin_expect(!!(x), 0)
 #endif
 
 #ifndef MIN
