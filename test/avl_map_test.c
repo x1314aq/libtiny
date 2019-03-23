@@ -17,13 +17,15 @@ static int test_cmp(const void *key1, const void *key2)
     return (uint64_t) key1 < (uint64_t) key2 ? -1 : 1;
 }
 
-static inline void print_usage()
+static inline void print_usage(int code)
 {
     puts("Usage: avl_map_test -n <NUMBER>   default: 1000000");
+    exit(code);
 }
 
 int main(int argc, char *argv[])
 {
+    int err = 0;
     int i, c, number = 1000000;
     uint64_t k, v;
     struct map_type type = {
@@ -35,24 +37,24 @@ int main(int argc, char *argv[])
     while((c = getopt(argc, argv, "hn:")) != -1) {
         switch(c) {
             case 'n':
-                number = atoi(optarg);
+                number = (int) strtol(optarg, NULL, 10);
                 break;
             case 'h':
             case '?':
+                print_usage(0);
             default:
-                print_usage();
-                return 0;
+                print_usage(1);
         }
     }
 
     if(number < 0) {
-        printf("negative entry NUMBER: %d\n", number);
-        return 1;
+        fprintf(stderr, "negative entry NUMBER: %d\n", number);
+        exit(1);
     }
 
     if(avl_map_init(&test_map, &type)) {
-        puts("init failed!");
-        return 1;
+        fprintf(stderr, "init failed!");
+        exit(1);
     }
 
     for(i = 0; i < number; i++) {
@@ -67,8 +69,8 @@ int main(int argc, char *argv[])
         if(e) {
             v = (uint64_t) e->val;
             if(v != k << 1) {
-                puts("Error1!");
-                return 1;
+                fprintf(stderr, "error1 in avl_map_find at %d\n", i);
+                err = 1;
             }
             avl_map_erase(&test_map, e);
         }
@@ -78,11 +80,11 @@ int main(int argc, char *argv[])
         k = i;
         struct map_entry *e = avl_map_find(&test_map, (void *) k);
         if(e) {
-            puts("Error2!");
-            return 1;
+            fprintf(stderr, "error2 in avl_map_find at %d\n", i);
+            err = 1;
         }
     }
 
     avl_map_destroy(&test_map);
-    return 0;
+    return err;
 }

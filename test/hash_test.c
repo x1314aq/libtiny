@@ -266,9 +266,10 @@ DONE:
     return ret;
 }
 
-static inline void print_usage()
+static inline void print_usage(int code)
 {
     puts("Usage: hash_test -n <NUMBER>   default: 1000000");
+    exit(code);
 }
 
 int main(int argc, char *argv[])
@@ -283,15 +284,15 @@ int main(int argc, char *argv[])
                 break;
             case 'h':
             case '?':
+                print_usage(0);
             default:
-                print_usage();
-                return 0;
+                print_usage(1);
         }
     }
 
     if(number < 0) {
         fprintf(stderr, "nagetive entry NUMBER: %d\n", number);
-        return 1;
+        exit(1);
     }
 
     ret = test1(number);

@@ -23,6 +23,7 @@ static int cmp(const void *a, const void *b)
 int main(int argc, char *argv[])
 {
     int c, number = 1000000;
+    int err = 0;
     
     while((c = getopt(argc, argv, "hn:")) != -1) {
         switch(c) {
@@ -31,8 +32,9 @@ int main(int argc, char *argv[])
                 break;
             case 'h':
             case '?':
-            default:
                 print_usage(0);
+            default:
+                print_usage(1);
         }
     }
 
@@ -58,20 +60,24 @@ int main(int argc, char *argv[])
     qsort(arr1, number, sizeof(int), cmp);
     for(int i = 0; i < number; i++) {
         arr2[i] -= arr1[i];
-        if(arr2[i] != 0)
-            printf("error1 at %d\n", i);
+        if(arr2[i] != 0) {
+            fprintf(stderr, "error1 at %d\n", i);
+            err = 1;
+        }
     }
 
     heap_sort(test1, arr3, number);
     for(int i = 0; i < number; i++) {
         arr3[i] -= arr1[i];
-        if(arr3[i] != 0)
-            printf("error2 at %d\n", i);
+        if(arr3[i] != 0) {
+            fprintf(stderr, "error2 at %d\n", i);
+            err = 1;
+        }
     }
 
     free(arr1);
     free(arr2);
     free(arr3);
     heap_destroy(test1, h);
-    return 0;
+    return err;
 }

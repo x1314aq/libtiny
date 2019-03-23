@@ -34,13 +34,15 @@ static inline void erase(struct test_node *node, struct avl_root *root)
     avl_erase(&node->avl, root);
 }
 
-static inline void print_usage()
+static inline void print_usage(int code)
 {
     puts("Usage: avl_test -n <NUMBER>   default: 1000000");
+    exit(code);
 }
 
 int main(int argc, char *argv[])
 {
+    int err = 0;
     int i, c, number = 1000000;
     struct test_node *test, *nodes;
     struct avl_node *node;
@@ -53,18 +55,20 @@ int main(int argc, char *argv[])
                 break;
             case 'h':
             case '?':
+                print_usage(0);
             default:
-                print_usage();
-                return 0;
+                print_usage(1);
         }
     }
 
     if(number < 0) {
-        printf("negative node NUMBER: %d\n", number);
-        return 1;
+        fprintf(stderr, "negative node NUMBER: %d\n", number);
+        exit(1);
     }
 
     nodes = (struct test_node *) calloc(number, sizeof(struct test_node));
+    uint32_t *temp = (uint32_t *) malloc(number * sizeof(uint32_t));
+    int k = 0; 
 
     for(i = 0; i < number; i++) {
         nodes[i].key = rand();
@@ -73,25 +77,27 @@ int main(int argc, char *argv[])
 
     for(node = avl_first(&root); node; node = avl_next(node)) {
         test = container_of(node, struct test_node, avl);
-        printf("%u\n", test->key);
+        temp[k++] = test->key;
     }
-
-    puts("---------------");
 
     for(node = avl_last(&root); node; node = avl_prev(node)) {
         test = container_of(node, struct test_node, avl);
-        printf("%u\n", test->key);
+        temp[--k] -= test->key;
+        if(temp[k] != 0) {
+            fprintf(stderr, "error at %d\n", k);
+            err = 1;
+        }
     }
 
     for(i = 0; i < number - 1; i++)
         erase(&nodes[i], &root);
 
     if(root.node != &nodes[number - 1].avl) {
-        puts("Error!\n");
-        free(nodes);
-        return 1;
+        fprintf(stderr, "error\n");
+        err = 1;
     }
 
+    free(temp);
     free(nodes);
-    return 0;
+    return err;
 }

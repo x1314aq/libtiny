@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     for(int i = 0; i < number; i++) {
         arr2[i] -= arr1[i];
         if(arr2[i] != 0) {
-            printf("error in merge_sort at %d\n", i);
+            fprintf(stderr, "error in merge_sort at %d\n", i);
             err = 1;
         }
     }
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     for(int i = 0; i < number; i++) {
         arr3[i] -= arr1[i];
         if(arr3[i] != 0) {
-            printf("error in comb_sort at %d\n", i);
+            fprintf(stderr, "error in comb_sort at %d\n", i);
             err = 1;
         }
     }
@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
     for(int i = 0; i < number; i++) {
         arr4[i] -= arr1[i];
         if(arr4[i] != 0) {
-            printf("error in intro_sort at %d\n", i);
+            fprintf(stderr, "error in intro_sort at %d\n", i);
             err = 1;
         }
     }
