@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(libtiny C)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -Wall -Wextra -Werror -std=gnu99 -fstack-protector-all")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -march=native -Wall -Wextra -Werror -std=gnu99")
 
 if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
     message(STATUS  "Compiler: Clang")
