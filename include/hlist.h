@@ -26,7 +26,7 @@ BEGIN_DECL
 /**
  * Declare a hash list head and initialize to NULL.
  */
-#define HLIST_HEAD(name)  \
+#define hlist_head(name)  \
     struct hlist_head name = { NULL };
 
 /**
@@ -127,8 +127,8 @@ hlist_empty(struct hlist_head *head)
  * @param head
  *   Head of the hash list to be traversed.
  */
-#define HLIST_FOR_EACH(pos, head)  \
-    for(pos = (head)->first; pos; pos = pos->next)
+#define hlist_for_each(pos, head)  \
+    for (pos = (head)->first; pos; pos = pos->next)
 
 END_DECL
 
