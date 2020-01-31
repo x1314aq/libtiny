@@ -133,7 +133,7 @@ list_empty(struct list_entry *head)
 
 #define list_entry(ptr, type, member)  container_of(ptr, type, member)
 
-#define list_first_entry(head, type, member)   list_entry((head).next, type, member)
+#define list_first_entry(head, type, member)   list_entry((head)->next, type, member)
 
 #define list_last_entry(ptr, type, member)  \
     list_entry((ptr)->prev, type, member)
